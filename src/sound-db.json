@@ -1,0 +1,34 @@
+[
+    {
+        "groupName": "Festival",
+        "bgColor": "#1b5e20",
+        "audio": [
+            {
+                "name": "3 Seconds",
+                "path": "/audio/sample-3s.mp3"
+            },
+            {
+                "name": "6 Seconds",
+                "path": "/audio/sample-6s.mp3"
+            },
+            {
+                "name": "9 Seconds",
+                "path": "/audio/sample-9s.mp3"
+            },
+            {
+                "name": "12 Seconds",
+                "path": "/audio/sample-12s.mp3"
+            }
+        ]
+    },
+    {
+        "groupName": "Travelling",
+        "bgColor": "#26c6da",
+        "audio": [
+            {
+                "name": "15 Seconds",
+                "path": "/audio/sample-15s.mp3"
+            }
+        ]
+    }
+]

@@ -1,5 +1,18 @@
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+}
+
+#root {
+  height: 100%;
+}
+
 .App {
   text-align: center;
+  height: 100%;
 }
 
 .App-logo {
@@ -13,15 +26,22 @@
   }
 }
 
-.App-header {
+.contentContainer {
+  height: 100%;
+  margin-top: -50px;
+}
+
+.content {
+  padding-top: 50px;
   background-color: #282c34;
-  min-height: 100vh;
+  height: 100%;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+}
+
+.footer {
+  height: 50px;
 }
 
 .App-link {
@@ -35,4 +55,8 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.audio-group {
+  margin: 10px !important;
 }
