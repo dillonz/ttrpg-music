@@ -20,13 +20,13 @@ interface SoundGroupState {
     expanded: boolean;
     indexPlaying: number;
     shuffledOrder: number[];
+    audioIndexTryingToPlay: number;
 }
 
 const soundGroupStyles = makeStyles(() => ({
     card: {
         width: '500px',
         borderRadius: 16,
-        overflow: 'hidden',
         margin: "10px",
         display: "inline-block",
     },
@@ -35,6 +35,9 @@ const soundGroupStyles = makeStyles(() => ({
         float: 'left',
         width: "95%",
         textAlign: 'left',
+        fontWeight: 'bold',
+        overflow: 'auto',
+        fontSize: '32px',
     },
     headerAction: {
         textAlign: 'right',
@@ -45,7 +48,7 @@ const soundGroupStyles = makeStyles(() => ({
 const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index }) => {
     const styles = soundGroupStyles();
 
-    const [state, setState] = React.useState<SoundGroupState>({expanded: false, indexPlaying:-1, shuffledOrder: []});
+    const [state, setState] = React.useState<SoundGroupState>({expanded: false, indexPlaying:-1, shuffledOrder: [], audioIndexTryingToPlay: -1});
 
     const [playingSound, setPlayingSound] = React.useState<HTMLAudioElement | undefined>(undefined)
 
@@ -62,16 +65,12 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
         console.log("start", index, ixArr, isPlaying)
         if (isPlaying)
         {            
-            console.log("inner", isPlaying);
             const audio = new Audio(group.audio[ixArr[index]].path);
-            console.log(audio);
             audio.addEventListener("ended", () => {
-                startSound(index + 1, ixArr);
+                nextAudio();
             });
             audio.play();
-            console.log("played");
             setPlayingSound(audio);
-            setState({...state, indexPlaying: index, shuffledOrder: ixArr});
             return audio;
         }
     };
@@ -86,6 +85,7 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
         else
         {
             audio.pause();
+            audio.srcObject = null;
         }
     }
 
@@ -98,46 +98,80 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
         }
     };
 
-    const onSkip = () => {
-        if (playingSound)
-        {
-            fadeOut(playingSound);
-            const audio = startSound(state.indexPlaying + 1, state.shuffledOrder);
-            if (audio)
-            {
-                audio.volume = 0;
-                fadeIn(audio);
-            }
-        }
+    const nextAudio = () => {
+        playingSound?.pause();
+        if (playingSound) playingSound.srcObject = null;
+        setState({ ...state, indexPlaying: (state.indexPlaying + 1) % group.audio.length });
     };
 
-    useEffect(() => {
+    const setIndex = (audioIndex: number) => {
+        console.log("isplaying", isPlaying)
+        if (isPlaying)
+        {
+            setState({...state, indexPlaying: state.shuffledOrder.indexOf(audioIndex)});
+        }
+        else
+        {
+            setState({ ...state, audioIndexTryingToPlay: audioIndex });
+            console.log('trying og', state.audioIndexTryingToPlay)
+            handlePlayClick();
+        }
+    }
+
+    const playPause = () => {
         if (isPlaying)
         {
             let tempArr = [];
+            console.log("trying", state.audioIndexTryingToPlay)
+            if (state.audioIndexTryingToPlay >= 0)
+            {
+                tempArr.push(state.audioIndexTryingToPlay)
+                setState({ ...state, audioIndexTryingToPlay: -1});
+            }
             while(tempArr.length < group.audio.length){
                 var r = Math.floor(Math.random() * group.audio.length);
                 if(tempArr.indexOf(r) === -1) tempArr.push(r);
             }
-            setState({...state, shuffledOrder: tempArr})
-            console.log(state);
-            const audio = startSound(0, tempArr);
+            setState({...state, shuffledOrder: tempArr, indexPlaying: 0})
+        }
+        else if (playingSound)
+        {
+            setState({ ...state, indexPlaying: -1, shuffledOrder: [] });
+        }
+    }
+
+    // Start and stop playing
+    useEffect(() => {
+        playPause();
+    }, [isPlaying])
+
+    // Handle playing index change
+    useEffect(() => {
+        console.log(state.indexPlaying);
+        // When we were playing but have stopped, fade out
+        if (state.indexPlaying < 0 && playingSound)
+        {
+            fadeOut(playingSound);
+        }
+        // When we were not playing, but have started, fade in
+        else if (state.indexPlaying >= 0 && !playingSound)
+        {
+            const audio = startSound(0, state.shuffledOrder);
             if (audio)
             {
                 audio.volume = 0;
                 fadeIn(audio);
             }
         }
-        else if (playingSound)
+        // When we change the audio clip, skip to it
+        else
         {
-            fadeOut(playingSound);
+            playingSound?.pause();
+            if (playingSound) playingSound.srcObject = null;
+            startSound(state.indexPlaying + 1, state.shuffledOrder);
         }
-    }, [isPlaying])
-
-    // Handle playing index change
-    useEffect(() => {
-
     }, [state.indexPlaying])
+
 
     return (
     <Card 
@@ -162,7 +196,7 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
                         <IconButton 
                             aria-label="settings"
                             className={styles.headerAction}
-                            onClick={onSkip}
+                            onClick={nextAudio}
                         >
                             <FastForward />
                         </IconButton>
@@ -171,6 +205,7 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
                 }
                 title={group.groupName}
                 className={styles.header}
+                // titleTypographyProps={{variant: 'h1' }}
             />            
             <Collapse 
                 in={state.expanded} 
@@ -178,8 +213,14 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
             >
                 <CardContent>
                     {
-                        group.audio.map((audio) => (
-                            <SoundButton name={audio.name} path={audio.path}/>
+                        group.audio.map((audio, index) => (
+                            <SoundButton 
+                                name={audio.name} 
+                                path={audio.path} 
+                                index={index}
+                                indexPlayingInGroup={state.shuffledOrder[state.indexPlaying]}
+                                playSpecificAudio={setIndex}
+                            />
                         ))
                     }
                 </CardContent>
