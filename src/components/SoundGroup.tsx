@@ -21,6 +21,7 @@ interface SoundGroupState {
     indexPlaying: number;
     shuffledOrder: number[];
     audioIndexTryingToPlay: number;
+    startPlaying: boolean;
 }
 
 const soundGroupStyles = makeStyles(() => ({
@@ -48,7 +49,13 @@ const soundGroupStyles = makeStyles(() => ({
 const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index }) => {
     const styles = soundGroupStyles();
 
-    const [state, setState] = React.useState<SoundGroupState>({expanded: false, indexPlaying:-1, shuffledOrder: [], audioIndexTryingToPlay: -1});
+    const [state, setState] = React.useState<SoundGroupState>({
+        expanded: false, 
+        indexPlaying:-1, 
+        shuffledOrder: [], 
+        audioIndexTryingToPlay: -1,
+        startPlaying: false,
+    });
 
     const [playingSound, setPlayingSound] = React.useState<HTMLAudioElement | undefined>(undefined)
 
@@ -62,7 +69,6 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
 
     const startSound = (index: number, ixArr: number[]) => {
         if (index >= ixArr.length) index = index % ixArr.length;
-        console.log("start", index, ixArr, isPlaying)
         if (isPlaying)
         {            
             const audio = new Audio(group.audio[ixArr[index]].path);
@@ -71,6 +77,7 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
             });
             audio.play();
             setPlayingSound(audio);
+            setState({ ...state, startPlaying: false });
             return audio;
         }
     };
@@ -105,7 +112,7 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
     };
 
     const setIndex = (audioIndex: number) => {
-        console.log("isplaying", isPlaying)
+        console.log("startingState", state)
         if (isPlaying)
         {
             setState({...state, indexPlaying: state.shuffledOrder.indexOf(audioIndex)});
@@ -122,21 +129,21 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
         if (isPlaying)
         {
             let tempArr = [];
-            console.log("trying", state.audioIndexTryingToPlay)
             if (state.audioIndexTryingToPlay >= 0)
             {
+                console.log("trying", state.audioIndexTryingToPlay)
                 tempArr.push(state.audioIndexTryingToPlay)
-                setState({ ...state, audioIndexTryingToPlay: -1});
             }
             while(tempArr.length < group.audio.length){
                 var r = Math.floor(Math.random() * group.audio.length);
                 if(tempArr.indexOf(r) === -1) tempArr.push(r);
             }
-            setState({...state, shuffledOrder: tempArr, indexPlaying: 0})
+            setState({...state, shuffledOrder: tempArr, indexPlaying: 0, audioIndexTryingToPlay: -1, startPlaying: true})
         }
         else if (playingSound)
         {
-            setState({ ...state, indexPlaying: -1, shuffledOrder: [] });
+            console.log('stoppingstate:', state);
+            setState({ ...state, indexPlaying: -1, shuffledOrder: [], audioIndexTryingToPlay: -1 });
         }
     }
 
@@ -147,15 +154,15 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
 
     // Handle playing index change
     useEffect(() => {
-        console.log(state.indexPlaying);
         // When we were playing but have stopped, fade out
         if (state.indexPlaying < 0 && playingSound)
         {
             fadeOut(playingSound);
         }
         // When we were not playing, but have started, fade in
-        else if (state.indexPlaying >= 0 && !playingSound)
+        else if (state.startPlaying)
         {
+            console.log('here', state.indexPlaying,state.shuffledOrder)
             const audio = startSound(0, state.shuffledOrder);
             if (audio)
             {
@@ -166,8 +173,10 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
         // When we change the audio clip, skip to it
         else
         {
+            console.log('3', state);
             playingSound?.pause();
             if (playingSound) playingSound.srcObject = null;
+            setPlayingSound(undefined);
             startSound(state.indexPlaying + 1, state.shuffledOrder);
         }
     }, [state.indexPlaying])

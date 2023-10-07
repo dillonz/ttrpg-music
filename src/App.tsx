@@ -5,8 +5,19 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import FileUploader from './components/FileUploader';
 import soundDb from './sound-db.json'
 import { makeStyles } from '@material-ui/core/styles';
+import { blue, green, purple } from '@mui/material/colors';
+import AddButton from './components/AddButton';
 
-const theme = createTheme();
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: blue[600],
+    },
+    secondary: {
+      main: purple[500],
+    },
+  }
+},);
 
 export interface AudioGroupData {
   groupName: string;
@@ -40,11 +51,17 @@ const App: React.FC = () => {
         <div className="contentContainer">
           <div className="content">
             <SoundBoard state={state} setState={setState}/>
+            <div className='bottom-right'>
+            <AddButton 
+              state={state} 
+              setState={setState}
+            ></AddButton>
+            </div>
           </div>
         </div>
-        <footer className="footer">
+        {/* <footer className="footer">
           <FileUploader />
-        </footer>
+        </footer> */}
       </div>
     </ThemeProvider>
   );

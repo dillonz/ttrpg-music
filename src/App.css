@@ -60,3 +60,9 @@ body {
 .audio-group {
   margin: 10px !important;
 }
+
+.bottom-right {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem; 
+}
