@@ -22,14 +22,25 @@ const AddGroupModal: React.FC<AddGroupModalProps> = ({ state, setState, open, on
     const [name, setName] = useState("");
     const [color, setColor] = useState<Color>(createColor('red'));
     
-    function handleClose(event: any): void {
-        event.preventDefault();
+    function handleClose(event?: any): void {
+        event?.preventDefault();
+        setColor(createColor('red'));
+        setName("");
         onClose();
     }
 
     function handleAdd(event: any): void {
         event.preventDefault();
-        onClose();
+
+        if (name && color)
+        {
+            let db = state.soundDb;
+            const newGroup: AudioGroupData = { groupName: name, bgColor: '#' + color.hex, audio: []}
+            db.push(newGroup);
+            setState({ ...state, soundDb: db });
+            axios.post('/save_state', db);
+        }
+        handleClose();
     }
 
     const handleNameChange = (event: any) => {
@@ -59,7 +70,14 @@ const AddGroupModal: React.FC<AddGroupModalProps> = ({ state, setState, open, on
                                 mb: 2
                             }}
                         />
-                        <ColorPicker value={color} onChange={handleColorChange} disableAlpha disableTextfield/>
+                        <span style={{ display: 'flex' }}>
+                            <div style={{ marginTop: '5px'}}>Color:</div>
+                            <ColorPicker
+                                value={color} 
+                                onChange={handleColorChange} 
+                                disableAlpha 
+                                hideTextfield/>
+                        </span>
                     </div>
                 </DialogContent>
                 <DialogActions>

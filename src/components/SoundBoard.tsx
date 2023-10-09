@@ -46,6 +46,8 @@ const SoundBoard: React.FC<SoundBoardProps> = ({ state, setState }) => {
                         isPlaying={state.groupPlayingIx === i}
                         onPlay={onClickPlay}
                         onDeleteAudio={onDeleteAudio}
+                        state={state}
+                        setState={setState}
                     />
                 ))
             }

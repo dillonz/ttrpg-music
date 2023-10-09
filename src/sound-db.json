@@ -30,5 +30,10 @@
                 "path": "sample-6s.mp3"
             }
         ]
+    },
+    {
+        "groupName": "Combat",
+        "bgColor": "#FF0000",
+        "audio": []
     }
 ]
