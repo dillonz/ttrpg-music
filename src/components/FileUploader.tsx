@@ -3,22 +3,14 @@ import { Input, Button } from '@mui/material';
 
 
 interface FileUploaderProps {
+    selectedFile: File | undefined;
+    setSelectedFile: (val: File | undefined) => void;
 }
 
-const FileUploader: React.FC<FileUploaderProps> = ({ }) => {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
+const FileUploader: React.FC<FileUploaderProps> = ({ selectedFile, setSelectedFile }) => {
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-
-    if (file) {
-      setSelectedFile(file);
-    }
-  };
-
-  const handleFileUpload = () => {
-    // Handle the selected file here, e.g., upload it to a server or process it in some way.
-    console.log('Selected file:', selectedFile);
+    setSelectedFile(file);
   };
 
   return (
@@ -32,15 +24,6 @@ const FileUploader: React.FC<FileUploaderProps> = ({ }) => {
         inputProps={{accept:".mp3, .wav"}} // Define accepted file types
         onChange={handleFileChange}
       />
-      <Button 
-        onClick={handleFileUpload}
-        variant="contained"
-        color="primary"
-        className="audio-button"
-        key="submit"
-      >
-        Add
-      </Button>
     </div>
   );
 };

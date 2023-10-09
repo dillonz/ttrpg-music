@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import SoundBoard from './components/SoundBoard';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -7,6 +7,7 @@ import soundDb from './sound-db.json'
 import { makeStyles } from '@material-ui/core/styles';
 import { blue, green, purple } from '@mui/material/colors';
 import AddButton from './components/AddButton';
+import axios from 'axios';
 
 const theme = createTheme({
   palette: {
@@ -39,11 +40,6 @@ const App: React.FC = () => {
   const sounds = soundDb as AudioGroupData[]
 
   let [state, setState] = useState<AppState>({soundDb: sounds, groupPlayingIx: -1});
-
-  const handleFileUpload = (file: File) => {
-    // Handle the selected file here, e.g., upload it to a server or process it in some way.
-    console.log('Selected file:', file);
-  };
 
   return (
     <ThemeProvider theme={theme}>

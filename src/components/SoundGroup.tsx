@@ -14,6 +14,7 @@ interface SoundGroupProps {
   index: number;
   isPlaying: boolean;
   onPlay: (index: number) => void;
+  onDeleteAudio: (group: AudioGroupData, audioIndex: number) => void;
 }
 
 interface SoundGroupState {
@@ -46,7 +47,7 @@ const soundGroupStyles = makeStyles(() => ({
 
 }));
 
-const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index }) => {
+const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index, onDeleteAudio }) => {
     const styles = soundGroupStyles();
 
     const [state, setState] = React.useState<SoundGroupState>({
@@ -65,6 +66,10 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
 
     const setExpanded = () => {
         setState({ ...state, expanded: !state.expanded });
+    };
+
+    const onDeleteAudioInternal = (index: number) => {
+        onDeleteAudio(group, index);
     };
 
     const startSound = (index: number, ixArr: number[]) => {
@@ -112,7 +117,6 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
     };
 
     const setIndex = (audioIndex: number) => {
-        console.log("startingState", state)
         if (isPlaying)
         {
             setState({...state, indexPlaying: state.shuffledOrder.indexOf(audioIndex)});
@@ -120,7 +124,6 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
         else
         {
             setState({ ...state, audioIndexTryingToPlay: audioIndex });
-            console.log('trying og', state.audioIndexTryingToPlay)
             handlePlayClick();
         }
     }
@@ -131,7 +134,6 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
             let tempArr = [];
             if (state.audioIndexTryingToPlay >= 0)
             {
-                console.log("trying", state.audioIndexTryingToPlay)
                 tempArr.push(state.audioIndexTryingToPlay)
             }
             while(tempArr.length < group.audio.length){
@@ -142,7 +144,6 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
         }
         else if (playingSound)
         {
-            console.log('stoppingstate:', state);
             setState({ ...state, indexPlaying: -1, shuffledOrder: [], audioIndexTryingToPlay: -1 });
         }
     }
@@ -162,7 +163,6 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
         // When we were not playing, but have started, fade in
         else if (state.startPlaying)
         {
-            console.log('here', state.indexPlaying,state.shuffledOrder)
             const audio = startSound(0, state.shuffledOrder);
             if (audio)
             {
@@ -173,7 +173,6 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
         // When we change the audio clip, skip to it
         else
         {
-            console.log('3', state);
             playingSound?.pause();
             if (playingSound) playingSound.srcObject = null;
             setPlayingSound(undefined);
@@ -229,6 +228,7 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
                                 index={index}
                                 indexPlayingInGroup={state.shuffledOrder[state.indexPlaying]}
                                 playSpecificAudio={setIndex}
+                                onDelete={onDeleteAudioInternal}
                             />
                         ))
                     }

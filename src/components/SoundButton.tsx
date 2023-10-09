@@ -9,16 +9,17 @@ interface SoundButtonProps {
   path: string;
   index: number;
   indexPlayingInGroup: number;
-  playSpecificAudio: (index: number) => void; 
+  playSpecificAudio: (index: number) => void;
+  onDelete: (index: number) => void;
 }
 
-const SoundButton: React.FC<SoundButtonProps> = ({ name, path, index, indexPlayingInGroup, playSpecificAudio }) => {
+const SoundButton: React.FC<SoundButtonProps> = ({ name, path, index, indexPlayingInGroup, playSpecificAudio, onDelete }) => {
     let [state, setState] = React.useState({ confirming: false });
 
     const onDeleteClick = () => {
         if (state.confirming)
         {
-            //Delete
+            onDelete(index)
         }
         else
         {

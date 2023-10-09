@@ -41,7 +41,6 @@ const AddButton: React.FC<AddButtonProps> = ({ state, setState }) => {
 
     const handleAddClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
-        console.log('add click', state)
         setSelectedIndex(-1);
     }
 
@@ -50,12 +49,15 @@ const AddButton: React.FC<AddButtonProps> = ({ state, setState }) => {
         index: number,
       ) => {
         setSelectedIndex(index);
-        console.log("menu item click", state, index);
         setAnchorEl(null);
       };
     
       const handleClose = () => {
         setAnchorEl(null);
+      };
+
+      const onCloseModal = () => {
+        setSelectedIndex(-1);
       };
 
     return (
@@ -130,6 +132,7 @@ const AddButton: React.FC<AddButtonProps> = ({ state, setState }) => {
                                 state={state} 
                                 setState={setState} 
                                 open={index === selectedIndex}
+                                onClose={onCloseModal}
                             />
             ))}
         </div>

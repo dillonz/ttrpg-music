@@ -21,6 +21,10 @@ const SoundBoard: React.FC<SoundBoardProps> = ({ state, setState }) => {
         }
     };
 
+    const onDeleteAudio = (group: AudioGroupData, index: number) => {
+        // Actually delete
+    };
+
     return (
         <div>
             {
@@ -30,6 +34,7 @@ const SoundBoard: React.FC<SoundBoardProps> = ({ state, setState }) => {
                         index={i}
                         isPlaying={state.groupPlayingIx === i}
                         onPlay={onClickPlay}
+                        onDeleteAudio={onDeleteAudio}
                     />
                 ))
             }
