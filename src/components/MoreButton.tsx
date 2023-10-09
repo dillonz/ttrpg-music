@@ -10,6 +10,7 @@ import AddAudioModal from './AddAudioModal';
 import { SvgIconComponent } from '@mui/icons-material';
 import AddGroupModal from './AddGroupModal';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import axios from 'axios'
 
 interface MoreButtonProps {
   state: AppState; // Array of sound file paths
@@ -20,29 +21,48 @@ interface MoreButtonProps {
 interface OptionType {
     title: string;
     iconType: SvgIconComponent;
-    modalType: typeof AddAudioModal;
+    callback: () => void;
 }
-const options: OptionType[] = [
-    {
-        title: 'Edit',
-        iconType: Edit,
-        modalType: AddAudioModal
-    },
-    {
-        title: 'Delete',
-        iconType: Delete,
-        modalType: AddGroupModal
-    }
-]
 
 const MoreButton: React.FC<MoreButtonProps> = ({ state, setState, groupIndex }) => {
     const theme=useTheme();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [selectedIndex, setSelectedIndex] = React.useState(-1);
+    const [editOpen, setEditOpen] = React.useState(false);
 
+    const onDelete = () =>
+    {
+        state.soundDb[groupIndex].audio.forEach((val: AudioData) => {
+            axios.post('/delete_audio', { path: val.path })
+        });
+
+        const db = state.soundDb;
+        db.splice(groupIndex, 1);
+        setState({ ...state, soundDb: db});
+        axios.post('/save_state', db);
+    }
+
+    const onEdit = () => {
+        console.log(groupIndex)
+        setEditOpen(true);
+    }
+
+    const options: OptionType[] = [
+        {
+            title: 'Edit',
+            iconType: Edit,
+            callback: onEdit
+        },
+        {
+            title: 'Delete',
+            iconType: Delete,
+            callback: onDelete
+        }
+    ]
+    
     const open = Boolean(anchorEl);
 
-    const handleAddClick = (event: React.MouseEvent<HTMLElement>) => {
+    const handleMoreMenuClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
         setSelectedIndex(-1);
     }
@@ -50,9 +70,11 @@ const MoreButton: React.FC<MoreButtonProps> = ({ state, setState, groupIndex }) 
     const handleMenuItemClick = (
         event: React.MouseEvent<HTMLElement>,
         index: number,
+        callback?: () => void
       ) => {
         setSelectedIndex(index);
         setAnchorEl(null);
+        if (callback) callback();
       };
     
       const handleClose = () => {
@@ -66,16 +88,12 @@ const MoreButton: React.FC<MoreButtonProps> = ({ state, setState, groupIndex }) 
     return (
         <div>
             <IconButton
-                style={{
-                    //borderRadius: '100px',
-                    //backgroundColor: theme.palette.primary.main
-                }}
                 id='more-button'
                 size='large'
                 aria-haspopup="listbox"
                 aria-controls="more-menu"
                 aria-expanded={open ? 'true' : undefined}
-                onClick={(event) => handleAddClick(event)}
+                onClick={(event) => handleMoreMenuClick(event)}
             >
                 <MoreVertIcon/>
             </IconButton>
@@ -101,7 +119,7 @@ const MoreButton: React.FC<MoreButtonProps> = ({ state, setState, groupIndex }) 
                     <MenuItem
                         key={option.title}
                         selected={index === selectedIndex}
-                        onClick={(event) => handleMenuItemClick(event, index)}
+                        onClick={(event) => handleMenuItemClick(event, index, option.callback)}
                     >
                         <ListItemIcon>
                             <option.iconType fontSize='small'/>
@@ -110,15 +128,13 @@ const MoreButton: React.FC<MoreButtonProps> = ({ state, setState, groupIndex }) 
                         </MenuItem>
                 ))}
             </Menu>
-            {/* {options.map((option, index) => (
-                <option.modalType 
-                                state={state} 
-                                setState={setState} 
-                                open={index === selectedIndex}
-                                onClose={onCloseModal}
-                                key={option.title}
-                            />
-            ))} */}
+            <AddGroupModal
+                state={state}
+                setState={setState}
+                open={editOpen}
+                onClose={() => { setEditOpen(false) }}
+                editingIndex={groupIndex}
+            />
         </div>
     );
 };

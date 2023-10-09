@@ -42,7 +42,7 @@ def upload_file():
         filename = (filename + ext).replace(" ", "_")
         print(filename)
         file.save(os.path.join(UPLOAD_FOLDER, filename))
-        return jsonify({'message': 'File uploaded successfully', 'name': '/audio/' + filename})
+        return jsonify({'message': 'File uploaded successfully', 'name': filename})
 
 @app.route('/delete_audio', methods=['POST'])
 def delete_file():

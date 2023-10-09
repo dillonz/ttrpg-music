@@ -15,13 +15,25 @@ interface AddGroupModalProps {
   setState: (val: AppState) => void;
   open: boolean;
   onClose: () => void;
+  editingIndex?: number;
 }
 
-const AddGroupModal: React.FC<AddGroupModalProps> = ({ state, setState, open, onClose }) => {
+const AddGroupModal: React.FC<AddGroupModalProps> = ({ state, setState, open, onClose, editingIndex }) => {
     const theme=useTheme();
-    const [name, setName] = useState("");
+
+    const [name, setName] = useState('');
     const [color, setColor] = useState<Color>(createColor('red'));
     
+    useEffect(() => {
+        if (editingIndex !== undefined)
+        {
+            console.log('open change')
+            const group = state.soundDb[editingIndex];
+            setName(group.groupName);
+            setColor(createColor(group.bgColor));
+        }
+    }, [open])
+
     function handleClose(event?: any): void {
         event?.preventDefault();
         setColor(createColor('red'));
@@ -35,8 +47,16 @@ const AddGroupModal: React.FC<AddGroupModalProps> = ({ state, setState, open, on
         if (name && color)
         {
             let db = state.soundDb;
-            const newGroup: AudioGroupData = { groupName: name, bgColor: '#' + color.hex, audio: []}
-            db.push(newGroup);
+            if (editingIndex === undefined)
+            {
+                const newGroup: AudioGroupData = { groupName: name, bgColor: '#' + color.hex, audio: []}
+                db.push(newGroup);
+            }
+            else
+            {
+                db[editingIndex].groupName = name;
+                db[editingIndex].bgColor = '#' + color.hex;
+            }
             setState({ ...state, soundDb: db });
             axios.post('/save_state', db);
         }
@@ -85,7 +105,7 @@ const AddGroupModal: React.FC<AddGroupModalProps> = ({ state, setState, open, on
                     <Button 
                         onClick={handleAdd}
                         disabled={!name}
-                    >Add</Button>
+                    >{editingIndex !== undefined ? "Update" : "Add"}</Button>
                 </DialogActions>
             </Dialog> 
         </div>

@@ -1,7 +1,7 @@
 [
     {
         "groupName": "Festival",
-        "bgColor": "#1b5e20",
+        "bgColor": "#EF6354",
         "audio": [
             {
                 "name": "3 Seconds",
@@ -30,10 +30,5 @@
                 "path": "sample-6s.mp3"
             }
         ]
-    },
-    {
-        "groupName": "Combat",
-        "bgColor": "#FF0000",
-        "audio": []
     }
 ]
