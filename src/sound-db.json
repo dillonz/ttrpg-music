@@ -5,15 +5,15 @@
         "audio": [
             {
                 "name": "3 Seconds",
-                "path": "/audio/sample-3s.mp3"
+                "path": "sample-3s.mp3"
             },
             {
                 "name": "9 Seconds",
-                "path": "/audio/sample-9s.mp3"
+                "path": "sample-9s.mp3"
             },
             {
                 "name": "12 Seconds",
-                "path": "/audio/sample-12s.mp3"
+                "path": "sample-12s.mp3"
             }
         ]
     },
@@ -23,15 +23,11 @@
         "audio": [
             {
                 "name": "15 Seconds",
-                "path": "/audio/sample-15s.mp3"
+                "path": "sample-15s.mp3"
             },
             {
                 "name": "6 Seconds",
-                "path": "/audio/sample-6s.mp3"
-            },
-            {
-                "name": "Super Test",
-                "path": "/audio/sample-3s_1.mp3"
+                "path": "sample-6s.mp3"
             }
         ]
     }

@@ -76,7 +76,7 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
         if (index >= ixArr.length) index = index % ixArr.length;
         if (isPlaying)
         {            
-            const audio = new Audio(group.audio[ixArr[index]].path);
+            const audio = new Audio('/audio/' + group.audio[ixArr[index]].path);
             audio.addEventListener("ended", () => {
                 nextAudio();
             });
@@ -180,7 +180,6 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
         }
     }, [state.indexPlaying])
 
-
     return (
     <Card 
         className={styles.card}
@@ -189,7 +188,6 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
             "borderRadius": "5px" 
         }}
         variant="outlined"
-        raised={true}
         >
              <CardHeader
                 action={
@@ -223,6 +221,7 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
                     {
                         group.audio.map((audio, index) => (
                             <SoundButton 
+                                key={audio.name}
                                 name={audio.name} 
                                 path={audio.path} 
                                 index={index}

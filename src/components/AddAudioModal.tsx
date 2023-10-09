@@ -116,7 +116,10 @@ const AddAudioModal: React.FC<AddAudioModalProps> = ({ state, setState, open, on
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleAdd}>Add</Button>
+                    <Button 
+                        onClick={handleAdd}
+                        disabled={!selectedFile || !name || group < 0}
+                    >Add</Button>
                 </DialogActions>
             </Dialog> 
         </div>

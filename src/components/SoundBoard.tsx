@@ -3,6 +3,7 @@ import SoundButton from './SoundButton';
 import { AudioGroupData, AudioData, AppState } from '../App';
 import SoundGroup from './SoundGroup';
 import { makeStyles } from '@material-ui/core/styles';
+import axios from 'axios';
 
 interface SoundBoardProps {
   state: AppState; // Array of sound file paths
@@ -22,7 +23,16 @@ const SoundBoard: React.FC<SoundBoardProps> = ({ state, setState }) => {
     };
 
     const onDeleteAudio = (group: AudioGroupData, index: number) => {
-        // Actually delete
+        axios.post('/delete_audio', { path: group.audio[index].path})
+            .then((response: any) =>
+            {
+                if (response.status === 200) {                    
+                    let db = state.soundDb;
+                    db[db.indexOf(group)].audio.splice(index,1);
+                    setState({ ...state, soundDb: db})
+                    axios.post('/save_state', db);
+                }
+            });
     };
 
     return (
@@ -31,6 +41,7 @@ const SoundBoard: React.FC<SoundBoardProps> = ({ state, setState }) => {
                 state.soundDb.map((group, i) => (
                     <SoundGroup 
                         group={group}
+                        key={group.groupName}
                         index={i}
                         isPlaying={state.groupPlayingIx === i}
                         onPlay={onClickPlay}

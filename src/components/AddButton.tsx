@@ -8,6 +8,7 @@ import { Add, AddCircle, CreateNewFolder, MusicNote } from '@mui/icons-material'
 import { useTheme } from '@mui/material/styles';
 import AddAudioModal from './AddAudioModal';
 import { SvgIconComponent } from '@mui/icons-material';
+import AddGroupModal from './AddGroupModal';
 
 interface AddButtonProps {
   state: AppState; // Array of sound file paths
@@ -28,7 +29,7 @@ const options: OptionType[] = [
     {
         title: 'Add group',
         iconType: CreateNewFolder,
-        modalType: AddAudioModal
+        modalType: AddGroupModal
     }
 ]
 
@@ -133,6 +134,7 @@ const AddButton: React.FC<AddButtonProps> = ({ state, setState }) => {
                                 setState={setState} 
                                 open={index === selectedIndex}
                                 onClose={onCloseModal}
+                                key={option.title}
                             />
             ))}
         </div>

@@ -9,7 +9,6 @@ UPLOAD_FOLDER = os.path.join('..', 'public', 'audio')
 @app.route('/save_state', methods=['POST'])
 def save_json():
     data = request.get_json()
-    print(data)
     # Save the data to a JSON file
     with open('sound-db.json', 'w') as json_file:
         json.dump(data, json_file, indent=4)
@@ -44,6 +43,15 @@ def upload_file():
         print(filename)
         file.save(os.path.join(UPLOAD_FOLDER, filename))
         return jsonify({'message': 'File uploaded successfully', 'name': '/audio/' + filename})
+
+@app.route('/delete_audio', methods=['POST'])
+def delete_file():
+    data = request.get_json()
+    print(data)
+    filename = os.path.basename(data.get('path'))
+    if (os.path.exists(os.path.join(UPLOAD_FOLDER, filename))):
+        os.remove(os.path.join(UPLOAD_FOLDER, filename))
+    return jsonify({'message': 'Done'})
 
 if __name__ == '__main__':
     app.run()
