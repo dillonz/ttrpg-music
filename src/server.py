@@ -10,7 +10,7 @@ UPLOAD_FOLDER = os.path.join('..', 'public', 'audio')
 def save_json():
     data = request.get_json()
     # Save the data to a JSON file
-    with open('sound-db.json', 'w') as json_file:
+    with open('no_reload/sound-db.json', 'w') as json_file:
         json.dump(data, json_file, indent=4)
 
     return jsonify({'message': 'Data saved successfully'})

@@ -19,15 +19,20 @@ const deleteGroup = createAction<DeleteGroupPL>(DELETE_GROUP);
 const createGroup = createAction<CreateGroupPL>(CREATE_GROUP);
 const editGroup = createAction<EditGroupPL>(EDIT_GROUP);
 
-export const updateState = () => {
-    axios.post('/save_state', store.getState().soundDb);
+export const updateState = (db: AudioGroupData[]) => {
+    axios.post('/save_state', db);
 }
 
 export const RootReducer = createReducer<AppState>(initialState, (builder) => {
     // Implement your reducer logic here
     builder
     .addCase(moveAudio, (state, action) => {
-        return state;
+        const { groupIndex, audioIndex, newGroupIndex } = action.payload;
+        const db = state.soundDb as AudioGroupData[];
+        const audioObj = db[groupIndex].audio[audioIndex];
+        db[newGroupIndex].audio.push(audioObj);
+        db[groupIndex].audio.splice(audioIndex, 1);
+        updateState(db);
     })
     .addCase(playGroup, (state, action) => {
         return { ...state, groupPlayingIx: action.payload };
@@ -36,13 +41,14 @@ export const RootReducer = createReducer<AppState>(initialState, (builder) => {
         const { groupIndex, audioIndex } = action.payload;
         const db = state.soundDb;
         db[groupIndex].audio.splice(audioIndex,1);
+        updateState(db);
     })
     .addCase(addAudio, (state, action) => {
         const { groupIndex, audioName, audioPath } = action.payload;
         const db = state.soundDb as AudioGroupData[];
 
         db[groupIndex].audio.push({ name: audioName, path: audioPath });
-        axios.post('/save_state', db);
+        updateState(db);
     })
     .addCase(deleteGroup, (state, action) => {
         const { groupIndex } = action.payload;
@@ -52,19 +58,19 @@ export const RootReducer = createReducer<AppState>(initialState, (builder) => {
             axios.post('/delete_audio', { path: db[groupIndex].audio[i].path })
         }
         db.splice(groupIndex, 1);
-        axios.post('/save_state', db);
+        updateState(db);
     })
     .addCase(createGroup, (state, action) => {
         const { groupName, bgColor } = action.payload;
         const db = state.soundDb as AudioGroupData[];
         db.push({ groupName: groupName, bgColor: bgColor, audio: [] })
-        axios.post('/save_state', db);
+        updateState(db);
     })
     .addCase(editGroup, (state, action) => {
         const { groupName, bgColor, groupIndex } = action.payload;
         const db = state.soundDb as AudioGroupData[];
         db[groupIndex].bgColor = bgColor;
         db[groupIndex].groupName = groupName;
-        axios.post('/save_state', db);
+        updateState(db);
     })
 });

@@ -4,10 +4,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import { IconButton } from '@mui/material';
 import { Delete, DeleteForever, DriveFileMove } from '@mui/icons-material';
 import { useDispatch } from 'react-redux';
-import { deleteAudio } from '../redux/actions';
+import { deleteAudio, moveAudio } from '../redux/actions';
 import axios from 'axios';
 import store from '../redux/store';
 import { updateState } from '../redux/reducers';
+import SelectGroupModal from './SelectGroupModal';
 
 interface SoundButtonProps {
   name: string;
@@ -19,25 +20,29 @@ interface SoundButtonProps {
 }
 
 const SoundButton: React.FC<SoundButtonProps> = ({ name, path, index, indexPlayingInGroup, playSpecificAudio, groupIndex }) => {
-    let [state, setState] = React.useState({ confirming: false });
+    let [confirmingDelete, setConfirmingDelete] = React.useState(false);
+    let [showGroupModal, setShowGroupModal] = React.useState(false);
     const dispatch = useDispatch();
+
+    const onSendToGroup = (newGroupIndex: number) => {
+        dispatch(moveAudio({ groupIndex: groupIndex, audioIndex: index, newGroupIndex: newGroupIndex }))
+    }
 
     const onDeleteClick = (event: any) => {
         event.preventDefault();
-        if (state.confirming)
+        if (confirmingDelete)
         {        
             axios.post('/delete_audio', { path: store.getState().soundDb[groupIndex].audio[index].path})
             .then((response: any) =>
             {
                 if (response.status === 200) {                    
                     dispatch(deleteAudio({ groupIndex: groupIndex, audioIndex: index }));
-                    updateState();
                 }
             });
         }
         else
         {
-            setState({...state, confirming: true})
+            setConfirmingDelete(true);
         }
     }
     return (
@@ -61,11 +66,18 @@ const SoundButton: React.FC<SoundButtonProps> = ({ name, path, index, indexPlayi
             <IconButton
                 onClick={onDeleteClick}
             >
-                {state.confirming ? <DeleteForever /> : <Delete />}
+                {confirmingDelete ? <DeleteForever /> : <Delete />}
             </IconButton>
-            <IconButton>
+            <IconButton
+                onClick={() => setShowGroupModal(true)}
+            >
                 <DriveFileMove />
             </IconButton>
+            <SelectGroupModal
+                open={showGroupModal}
+                onClose={() => setShowGroupModal(false)}
+                handleSelect={onSendToGroup}
+            />
         </span>
     );
 };

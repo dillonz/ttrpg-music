@@ -8,16 +8,15 @@ import { Add, AddCircle } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 import FileUploader from './FileUploader';
 import axios from 'axios';
+import store from '../redux/store';
 
-interface AddAudioModalProps {
-  state: AppState; // Array of sound file paths
-  setState: (val: AppState) => void;
+interface SelectGroupModal {
   open: boolean;
   onClose: () => void;
   handleSelect: (index: number) => void;
 }
 
-const AddAudioModal: React.FC<AddAudioModalProps> = ({ state, setState, open, onClose, handleSelect }) => {
+const SelectGroupModal: React.FC<SelectGroupModal> = ({ open, onClose, handleSelect }) => {
     const theme=useTheme();
     const radioGroupRef = React.useRef<HTMLElement>(null);
     const [group, setGroup] = React.useState(0);
@@ -46,7 +45,7 @@ const AddAudioModal: React.FC<AddAudioModalProps> = ({ state, setState, open, on
                             value={group}
                             onChange={handleChange}
                         >
-                            {state.soundDb.map((group, index) => (
+                            {store.getState().soundDb.map((group, index) => (
                                 <FormControlLabel
                                     value={index}
                                     key={group.groupName}
@@ -60,7 +59,7 @@ const AddAudioModal: React.FC<AddAudioModalProps> = ({ state, setState, open, on
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
                     <Button 
-                        onClick={() => handleSelect(group)}
+                        onClick={(event) => {handleSelect(group); handleClose(event);}}
                         disabled={group < 0}
                     >Select</Button>
                 </DialogActions>
@@ -69,4 +68,4 @@ const AddAudioModal: React.FC<AddAudioModalProps> = ({ state, setState, open, on
     );
 };
 
-export default AddAudioModal;
+export default SelectGroupModal;

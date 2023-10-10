@@ -34,7 +34,7 @@ export const deleteAudio = (payload: DeleteAudioPL) => {
   }
 }
 
-// Deleting audio
+// Adding audio
 export const ADD_AUDIO = 'ADD_AUDIO';
 export interface AddAudioPL {
   groupIndex: number;
