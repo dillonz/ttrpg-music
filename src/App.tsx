@@ -3,7 +3,6 @@ import './App.css';
 import SoundBoard from './components/SoundBoard';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import FileUploader from './components/FileUploader';
-import soundDb from './sound-db.json'
 import { makeStyles } from '@material-ui/core/styles';
 import { blue, green, purple } from '@mui/material/colors';
 import AddButton from './components/AddButton';
@@ -37,21 +36,14 @@ export interface AppState {
 }
 
 const App: React.FC = () => {
-  const sounds = soundDb as AudioGroupData[]
-
-  let [state, setState] = useState<AppState>({soundDb: sounds, groupPlayingIx: -1});
-
   return (
     <ThemeProvider theme={theme}>
       <div className="App">
         <div className="contentContainer">
           <div className="content">
-            <SoundBoard state={state} setState={setState}/>
+            <SoundBoard />
             <div className='bottom-right'>
-            <AddButton 
-              state={state} 
-              setState={setState}
-            ></AddButton>
+            <AddButton />
             </div>
           </div>
         </div>

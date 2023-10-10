@@ -4,50 +4,31 @@ import { AudioGroupData, AudioData, AppState } from '../App';
 import SoundGroup from './SoundGroup';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteAudio, playGroup } from '../redux/actions';
 
 interface SoundBoardProps {
-  state: AppState; // Array of sound file paths
-  setState: (val: any) => void;
 }
 
-const SoundBoard: React.FC<SoundBoardProps> = ({ state, setState }) => {
-    const onClickPlay = (index: number) => {
-        if (state.groupPlayingIx === index)
-        {
-            setState({...state, groupPlayingIx: -1});
-        }
-        else
-        {
-            setState({...state, groupPlayingIx: index});
-        }
-    };
+const SoundBoard: React.FC<SoundBoardProps> = ({ }) => {
+    const groupPlayingIx = useSelector((state: AppState) => state.groupPlayingIx);
+    const soundDb = useSelector((state: AppState) => state.soundDb);
+    const dispatch = useDispatch();
 
-    const onDeleteAudio = (group: AudioGroupData, index: number) => {
-        axios.post('/delete_audio', { path: group.audio[index].path})
-            .then((response: any) =>
-            {
-                if (response.status === 200) {                    
-                    let db = state.soundDb;
-                    db[db.indexOf(group)].audio.splice(index,1);
-                    setState({ ...state, soundDb: db})
-                    axios.post('/save_state', db);
-                }
-            });
+    const onClickPlay = (index: number) => {
+        dispatch(playGroup(groupPlayingIx === index ? -1 : index ))
     };
 
     return (
         <div>
             {
-                state.soundDb.map((group, i) => (
+                soundDb.map((group, i) => (
                     <SoundGroup 
                         group={group}
                         key={group.groupName}
                         index={i}
-                        isPlaying={state.groupPlayingIx === i}
+                        isPlaying={groupPlayingIx === i}
                         onPlay={onClickPlay}
-                        onDeleteAudio={onDeleteAudio}
-                        state={state}
-                        setState={setState}
                     />
                 ))
             }

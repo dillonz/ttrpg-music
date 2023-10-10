@@ -1,34 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import SoundButton from './SoundButton';
-import { AudioGroupData, AudioData, AppState } from '../App';
-import SoundGroup from './SoundGroup';
-import { makeStyles } from '@material-ui/core/styles';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControlLabel, IconButton, Menu, MenuItem, Radio, RadioGroup, TextField } from '@mui/material';
-import { Add, AddCircle } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
-import FileUploader from './FileUploader';
-import axios from 'axios';
 import { Color, ColorPicker, createColor } from "material-ui-color";
+import { createGroup, editGroup } from '../redux/actions';
+import { useDispatch } from 'react-redux';
+import store from '../redux/store';
 
 interface AddGroupModalProps {
-  state: AppState; // Array of sound file paths
-  setState: (val: AppState) => void;
   open: boolean;
   onClose: () => void;
   editingIndex?: number;
 }
 
-const AddGroupModal: React.FC<AddGroupModalProps> = ({ state, setState, open, onClose, editingIndex }) => {
+const AddGroupModal: React.FC<AddGroupModalProps> = ({ open, onClose, editingIndex }) => {
     const theme=useTheme();
 
     const [name, setName] = useState('');
     const [color, setColor] = useState<Color>(createColor('red'));
     
+    const dispatch = useDispatch();
+
     useEffect(() => {
         if (editingIndex !== undefined)
         {
             console.log('open change')
-            const group = state.soundDb[editingIndex];
+            const group = store.getState().soundDb[editingIndex];
             setName(group.groupName);
             setColor(createColor(group.bgColor));
         }
@@ -46,19 +42,14 @@ const AddGroupModal: React.FC<AddGroupModalProps> = ({ state, setState, open, on
 
         if (name && color)
         {
-            let db = state.soundDb;
             if (editingIndex === undefined)
             {
-                const newGroup: AudioGroupData = { groupName: name, bgColor: '#' + color.hex, audio: []}
-                db.push(newGroup);
+                dispatch(createGroup({ groupName: name, bgColor: '#' + color.hex }))
             }
             else
             {
-                db[editingIndex].groupName = name;
-                db[editingIndex].bgColor = '#' + color.hex;
+                dispatch(editGroup({ groupName: name, bgColor: '#' + color.hex, groupIndex: editingIndex }))
             }
-            setState({ ...state, soundDb: db });
-            axios.post('/save_state', db);
         }
         handleClose();
     }

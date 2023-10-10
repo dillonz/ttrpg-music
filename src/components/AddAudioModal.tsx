@@ -8,20 +8,23 @@ import { Add, AddCircle } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 import FileUploader from './FileUploader';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { addAudio } from '../redux/actions';
+import store from '../redux/store';
 
 interface AddAudioModalProps {
-  state: AppState; // Array of sound file paths
-  setState: (val: AppState) => void;
   open: boolean;
   onClose: () => void;
 }
 
-const AddAudioModal: React.FC<AddAudioModalProps> = ({ state, setState, open, onClose }) => {
+const AddAudioModal: React.FC<AddAudioModalProps> = ({ open, onClose }) => {
     const theme=useTheme();
     const radioGroupRef = React.useRef<HTMLElement>(null);
     const [group, setGroup] = React.useState(0);
     const [selectedFile, setSelectedFile] = React.useState<File | undefined>(undefined);
     const [name, setName] = React.useState("");
+
+    const dispatch = useDispatch();
 
     function handleClose(event: any): void {
         event.preventDefault();
@@ -36,17 +39,11 @@ const AddAudioModal: React.FC<AddAudioModalProps> = ({ state, setState, open, on
         if (selectedFile) {
             const formData = new FormData();
             formData.append('file', selectedFile);
-            const fileExtension = selectedFile.name.match(new RegExp('[^.]+$'));
-            formData.append('name', name + fileExtension)
-      
+    
             axios.post('/upload', formData)
             .then((response: any) => {
                 if (response.status === 200) {
-                    let db = state.soundDb;
-                    let addedGroup = db[group];
-                    addedGroup.audio.push({ name: name, path: response.data.name })
-                    setState({ ...state, soundDb: db});
-                    axios.post('/save_state', db);
+                    dispatch(addAudio({ groupIndex: group, audioName: name, audioPath: response.data.name }))
                 } else {
                     console.error('File upload failed');
                 }
@@ -101,7 +98,7 @@ const AddAudioModal: React.FC<AddAudioModalProps> = ({ state, setState, open, on
                             onChange={handleChange}
                             hidden={!selectedFile}
                         >
-                            {state.soundDb.map((group, index) => (
+                            {store.getState().soundDb.map((group, index) => (
                                 <FormControlLabel
                                     value={index}
                                     key={group.groupName}

@@ -15,9 +15,6 @@ interface SoundGroupProps {
   index: number;
   isPlaying: boolean;
   onPlay: (index: number) => void;
-  onDeleteAudio: (group: AudioGroupData, audioIndex: number) => void;
-  state: AppState;
-  setState: (val: any) => void;
 }
 
 interface SoundGroupState {
@@ -50,7 +47,7 @@ const soundGroupStyles = makeStyles(() => ({
 
 }));
 
-const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index, onDeleteAudio, state, setState }) => {
+const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index }) => {
     const styles = soundGroupStyles();
 
     const [internalState, setInternalState] = React.useState<SoundGroupState>({
@@ -69,10 +66,6 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
 
     const setExpanded = () => {
         setInternalState({ ...internalState, expanded: !internalState.expanded });
-    };
-
-    const onDeleteAudioInternal = (index: number) => {
-        onDeleteAudio(group, index);
     };
 
     const startSound = (index: number, ixArr: number[]) => {
@@ -196,7 +189,7 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
                 action={
                     <CardActions disableSpacing>
                         <ExpandButton expanded={internalState.expanded} setExpanded={setExpanded}/>
-                        <MoreButton state={state} setState={setState} groupIndex={index} />
+                        <MoreButton groupIndex={index} />
                         <IconButton 
                             aria-label="settings"
                             className={styles.headerAction}
@@ -225,7 +218,7 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
                                 index={i}
                                 indexPlayingInGroup={internalState.shuffledOrder[internalState.indexPlaying]}
                                 playSpecificAudio={setIndex}
-                                onDelete={onDeleteAudioInternal}
+                                groupIndex={index}
                             />
                         ))
                     }

@@ -1,7 +1,7 @@
 import { createStore } from 'redux';
 import { RootReducer } from './reducers'; // You'll create this next
 import { configureStore } from '@reduxjs/toolkit'
-import soundDb from '../sound-db.json'
+import soundDb from '../no_reload/sound-db.json'
 import { AppState, AudioGroupData } from '../App';
 import type { Reducer } from '@reduxjs/toolkit'
 

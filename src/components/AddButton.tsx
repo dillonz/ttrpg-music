@@ -11,8 +11,6 @@ import { SvgIconComponent } from '@mui/icons-material';
 import AddGroupModal from './AddGroupModal';
 
 interface AddButtonProps {
-  state: AppState; // Array of sound file paths
-  setState: (val: any) => void;
 }
 
 interface OptionType {
@@ -33,7 +31,7 @@ const options: OptionType[] = [
     }
 ]
 
-const AddButton: React.FC<AddButtonProps> = ({ state, setState }) => {
+const AddButton: React.FC<AddButtonProps> = ({ }) => {
     const theme=useTheme();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [selectedIndex, setSelectedIndex] = React.useState(-1);
@@ -130,8 +128,6 @@ const AddButton: React.FC<AddButtonProps> = ({ state, setState }) => {
             </Menu>
             {options.map((option, index) => (
                 <option.modalType 
-                                state={state} 
-                                setState={setState} 
                                 open={index === selectedIndex}
                                 onClose={onCloseModal}
                                 key={option.title}

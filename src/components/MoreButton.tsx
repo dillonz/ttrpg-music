@@ -11,10 +11,10 @@ import { SvgIconComponent } from '@mui/icons-material';
 import AddGroupModal from './AddGroupModal';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import axios from 'axios'
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteGroup } from '../redux/actions';
 
 interface MoreButtonProps {
-  state: AppState; // Array of sound file paths
-  setState: (val: any) => void;
   groupIndex: number;
 }
 
@@ -24,22 +24,17 @@ interface OptionType {
     callback: () => void;
 }
 
-const MoreButton: React.FC<MoreButtonProps> = ({ state, setState, groupIndex }) => {
+const MoreButton: React.FC<MoreButtonProps> = ({ groupIndex }) => {
     const theme=useTheme();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [selectedIndex, setSelectedIndex] = React.useState(-1);
     const [editOpen, setEditOpen] = React.useState(false);
+    const soundDb = useSelector((state: AppState) => state.soundDb);
+    const dispatch = useDispatch();
 
     const onDelete = () =>
     {
-        state.soundDb[groupIndex].audio.forEach((val: AudioData) => {
-            axios.post('/delete_audio', { path: val.path })
-        });
-
-        const db = state.soundDb;
-        db.splice(groupIndex, 1);
-        setState({ ...state, soundDb: db});
-        axios.post('/save_state', db);
+        dispatch(deleteGroup({ groupIndex: groupIndex }));
     }
 
     const onEdit = () => {
@@ -129,8 +124,6 @@ const MoreButton: React.FC<MoreButtonProps> = ({ state, setState, groupIndex }) 
                 ))}
             </Menu>
             <AddGroupModal
-                state={state}
-                setState={setState}
                 open={editOpen}
                 onClose={() => { setEditOpen(false) }}
                 editingIndex={groupIndex}

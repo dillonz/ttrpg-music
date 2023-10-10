@@ -3,6 +3,11 @@ import Button from '@mui/material/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import { IconButton } from '@mui/material';
 import { Delete, DeleteForever, DriveFileMove } from '@mui/icons-material';
+import { useDispatch } from 'react-redux';
+import { deleteAudio } from '../redux/actions';
+import axios from 'axios';
+import store from '../redux/store';
+import { updateState } from '../redux/reducers';
 
 interface SoundButtonProps {
   name: string;
@@ -10,16 +15,25 @@ interface SoundButtonProps {
   index: number;
   indexPlayingInGroup: number;
   playSpecificAudio: (index: number) => void;
-  onDelete: (index: number) => void;
+  groupIndex: number;
 }
 
-const SoundButton: React.FC<SoundButtonProps> = ({ name, path, index, indexPlayingInGroup, playSpecificAudio, onDelete }) => {
+const SoundButton: React.FC<SoundButtonProps> = ({ name, path, index, indexPlayingInGroup, playSpecificAudio, groupIndex }) => {
     let [state, setState] = React.useState({ confirming: false });
+    const dispatch = useDispatch();
 
-    const onDeleteClick = () => {
+    const onDeleteClick = (event: any) => {
+        event.preventDefault();
         if (state.confirming)
-        {
-            onDelete(index)
+        {        
+            axios.post('/delete_audio', { path: store.getState().soundDb[groupIndex].audio[index].path})
+            .then((response: any) =>
+            {
+                if (response.status === 200) {                    
+                    dispatch(deleteAudio({ groupIndex: groupIndex, audioIndex: index }));
+                    updateState();
+                }
+            });
         }
         else
         {
