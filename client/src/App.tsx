@@ -7,6 +7,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { blue, green, purple } from '@mui/material/colors';
 import AddButton from './components/AddButton';
 import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { loadState } from './redux/actions';
 
 const theme = createTheme({
   palette: {
@@ -32,11 +34,26 @@ export interface AudioData {
 
 export interface AppState {
   soundDb: AudioGroupData[];
+  isLoaded: boolean;
   groupPlayingIx: number;
 }
 
 const App: React.FC = () => {
-  return (
+  const dispatch = useDispatch();
+  const isLoaded = useSelector((state: AppState) => state.isLoaded);
+
+  useEffect(() => {
+    if (!isLoaded) {
+      axios
+      .get('/get_state')
+      .then((response) => {
+        console.log(response);
+        dispatch(loadState(response.data as AudioGroupData[]))
+      });
+    }
+  }, [dispatch, isLoaded]);
+
+  if (isLoaded) return (
     <ThemeProvider theme={theme}>
       <div className="App">
         <div className="contentContainer">
@@ -53,6 +70,7 @@ const App: React.FC = () => {
       </div>
     </ThemeProvider>
   );
+  return null;
 };
 
 export default App;

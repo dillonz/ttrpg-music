@@ -23,7 +23,6 @@ const AddGroupModal: React.FC<AddGroupModalProps> = ({ open, onClose, editingInd
     useEffect(() => {
         if (editingIndex !== undefined)
         {
-            console.log('open change')
             const group = store.getState().soundDb[editingIndex];
             setName(group.groupName);
             setColor(createColor(group.bgColor));

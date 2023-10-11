@@ -1,3 +1,14 @@
+import { AudioGroupData } from "../App";
+
+// Used for initial load
+export const LOAD_STATE = 'LOAD_STATE';
+export const loadState = (payload: AudioGroupData[]) => {
+  return {
+    type: LOAD_STATE,
+    payload,
+  };
+};
+
 // Used for moving a song from one group to another
 export const MOVE_AUDIO = 'MOVE_AUDIO';
 export interface MoveAudioPL {

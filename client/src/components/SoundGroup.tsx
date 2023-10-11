@@ -22,7 +22,6 @@ interface SoundGroupState {
     indexPlaying: number;
     shuffledOrder: number[];
     audioIndexTryingToPlay: number;
-    startPlaying: boolean;
 }
 
 const soundGroupStyles = makeStyles(() => ({
@@ -55,7 +54,6 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
         indexPlaying:-1, 
         shuffledOrder: [], 
         audioIndexTryingToPlay: -1,
-        startPlaying: false,
     });
 
     const [playingSound, setPlayingSound] = React.useState<HTMLAudioElement | undefined>(undefined)
@@ -69,16 +67,17 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
     };
 
     const startSound = (index: number, ixArr: number[]) => {
-        if (index >= ixArr.length) index = index % ixArr.length;
         if (isPlaying)
         {            
             const audio = new Audio('/audio/' + group.audio[ixArr[index]].path);
             audio.addEventListener("ended", () => {
-                nextAudio();
+                if (isPlaying)
+                {
+                    nextAudio();
+                }
             });
             audio.play();
             setPlayingSound(audio);
-            setInternalState({ ...internalState, startPlaying: false });
             return audio;
         }
     };
@@ -109,7 +108,11 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
     const nextAudio = () => {
         playingSound?.pause();
         if (playingSound) playingSound.srcObject = null;
-        setInternalState({ ...internalState, indexPlaying: (internalState.indexPlaying + 1) % group.audio.length });
+        console.log('next',internalState)
+        if (internalState.indexPlaying >= 0)
+        {
+            setInternalState({ ...internalState, indexPlaying: (internalState.indexPlaying + 1) % group.audio.length });
+        }
     };
 
     const setIndex = (audioIndex: number) => {
@@ -136,7 +139,7 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
                 var r = Math.floor(Math.random() * group.audio.length);
                 if(tempArr.indexOf(r) === -1) tempArr.push(r);
             }
-            setInternalState({...internalState, shuffledOrder: tempArr, indexPlaying: 0, audioIndexTryingToPlay: -1, startPlaying: true})
+            setInternalState({...internalState, shuffledOrder: tempArr, indexPlaying: 0, audioIndexTryingToPlay: -1 })
         }
         else if (playingSound)
         {
@@ -155,9 +158,11 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
         if (internalState.indexPlaying < 0 && playingSound)
         {
             fadeOut(playingSound);
+            setPlayingSound(undefined);
+            setInternalState({ ...internalState, indexPlaying: -1, shuffledOrder: [], audioIndexTryingToPlay: -1 })
         }
         // When we were not playing, but have started, fade in
-        else if (internalState.startPlaying)
+        else if (!playingSound)
         {
             const audio = startSound(0, internalState.shuffledOrder);
             if (audio)
@@ -172,7 +177,7 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
             playingSound?.pause();
             if (playingSound) playingSound.srcObject = null;
             setPlayingSound(undefined);
-            startSound(internalState.indexPlaying + 1, internalState.shuffledOrder);
+            startSound(internalState.indexPlaying, internalState.shuffledOrder);
         }
     }, [internalState.indexPlaying])
 

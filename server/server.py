@@ -4,16 +4,21 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-UPLOAD_FOLDER = os.path.join('..', 'public', 'audio')
+UPLOAD_FOLDER = os.path.join('..', 'client', 'public', 'audio')
 
 @app.route('/save_state', methods=['POST'])
 def save_json():
     data = request.get_json()
     # Save the data to a JSON file
-    with open('no_reload/sound-db.json', 'w') as json_file:
+    with open('sound-db.json', 'w') as json_file:
         json.dump(data, json_file, indent=4)
-
     return jsonify({'message': 'Data saved successfully'})
+
+@app.route('/get_state', methods=['GET'])
+def get_json():
+    with open('sound-db.json', 'r') as json_file:
+        data = json.load(json_file)
+    return jsonify(data)
 
 @app.route('/upload', methods=['POST'])
 def upload_file():

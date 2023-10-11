@@ -1,16 +1,17 @@
 import { combineReducers } from 'redux';
 import { AppState, AudioData, AudioGroupData } from '../App';
-import soundDb from '../no_reload/sound-db.json'
 import { createAction, createReducer } from '@reduxjs/toolkit'
-import { ADD_AUDIO, AddAudioPL, CREATE_GROUP, CreateGroupPL, DELETE_AUDIO, DELETE_GROUP, DeleteAudioPL, DeleteGroupPL, EDIT_GROUP, EditGroupPL, MOVE_AUDIO, MoveAudioPL, PLAY_GROUP } from './actions';
+import { ADD_AUDIO, AddAudioPL, CREATE_GROUP, CreateGroupPL, DELETE_AUDIO, DELETE_GROUP, DeleteAudioPL, DeleteGroupPL, EDIT_GROUP, EditGroupPL, LOAD_STATE, MOVE_AUDIO, MoveAudioPL, PLAY_GROUP } from './actions';
 import axios from 'axios';
 import store from './store';
 
-const initialState: AppState = {
-    soundDb: soundDb as AudioGroupData[],
+export let initialState: AppState = {
+    soundDb: [],
+    isLoaded: false,
     groupPlayingIx: -1
 }
 
+const loadState = createAction<AudioGroupData[]>(LOAD_STATE);
 const moveAudio = createAction<MoveAudioPL>(MOVE_AUDIO);
 const playGroup = createAction<number>(PLAY_GROUP);
 const deleteAudio = createAction<DeleteAudioPL>(DELETE_AUDIO);
@@ -26,6 +27,10 @@ export const updateState = (db: AudioGroupData[]) => {
 export const RootReducer = createReducer<AppState>(initialState, (builder) => {
     // Implement your reducer logic here
     builder
+    .addCase(loadState, (state, action) => {
+        state.soundDb = action.payload;
+        state.isLoaded = true;
+    })
     .addCase(moveAudio, (state, action) => {
         const { groupIndex, audioIndex, newGroupIndex } = action.payload;
         const db = state.soundDb as AudioGroupData[];

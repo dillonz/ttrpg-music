@@ -1,7 +1,5 @@
 [
     {
-        "groupName": "Festival",
-        "bgColor": "#54F063",
         "audio": [
             {
                 "name": "3 Seconds",
@@ -10,16 +8,12 @@
             {
                 "name": "9 Seconds",
                 "path": "sample-9s.mp3"
-            },
-            {
-                "name": "12 Seconds",
-                "path": "sample-12s.mp3"
             }
-        ]
+        ],
+        "bgColor": "#54F063",
+        "groupName": "Festival"
     },
     {
-        "groupName": "Travelling",
-        "bgColor": "#26c6da",
         "audio": [
             {
                 "name": "15 Seconds",
@@ -28,7 +22,13 @@
             {
                 "name": "6 Seconds",
                 "path": "sample-6s.mp3"
+            },
+            {
+                "name": "12 Seconds",
+                "path": "sample-12s.mp3"
             }
-        ]
+        ],
+        "bgColor": "#26c6da",
+        "groupName": "Travelling"
     }
 ]
