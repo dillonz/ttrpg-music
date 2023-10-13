@@ -10,15 +10,11 @@
                 "path": "sample-9s.mp3"
             }
         ],
-        "bgColor": "#54F063",
-        "groupName": "Festival"
+        "bgColor": "#B4EFBA",
+        "groupName": "Test 1"
     },
     {
         "audio": [
-            {
-                "name": "15 Seconds",
-                "path": "sample-15s.mp3"
-            },
             {
                 "name": "6 Seconds",
                 "path": "sample-6s.mp3"
@@ -26,9 +22,38 @@
             {
                 "name": "12 Seconds",
                 "path": "sample-12s.mp3"
+            },
+            {
+                "name": "15 Seconds",
+                "path": "sample-15s.mp3"
             }
         ],
-        "bgColor": "#26c6da",
-        "groupName": "Travelling"
+        "bgColor": "#E3E3E3",
+        "groupName": "Test 2"
+    },
+    {
+        "audio": [],
+        "bgColor": "#FF0000",
+        "groupName": "Combat"
+    },
+    {
+        "audio": [],
+        "bgColor": "#CB64FA",
+        "groupName": "Mysterious"
+    },
+    {
+        "audio": [],
+        "bgColor": "#52CFF8",
+        "groupName": "Emotional"
+    },
+    {
+        "groupName": "Festival",
+        "bgColor": "#5CA157",
+        "audio": []
+    },
+    {
+        "groupName": "Underwater",
+        "bgColor": "#054E93",
+        "audio": []
     }
 ]

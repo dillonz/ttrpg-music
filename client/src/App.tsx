@@ -9,6 +9,8 @@ import AddButton from './components/AddButton';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadState } from './redux/actions';
+import { updateState } from './redux/reducers';
+import store from './redux/store';
 
 const theme = createTheme({
   palette: {
@@ -52,6 +54,10 @@ const App: React.FC = () => {
       });
     }
   }, [dispatch, isLoaded]);
+
+  window.addEventListener("beforeunload", (event) => {
+    updateState(store.getState().soundDb);
+  });
 
   if (isLoaded) return (
     <ThemeProvider theme={theme}>

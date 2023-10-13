@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { AppState, AudioGroupData } from '../App';
 import SoundButton from './SoundButton';
 import { Card, CardActions, CardContent, CardHeader, Collapse, IconButton } from '@mui/material';
@@ -8,6 +8,7 @@ import ExpandButton from './ExpandButton';
 import PlayButton from './PlayButton';
 import { FastForward } from '@mui/icons-material';
 import MoreButton from './MoreButton';
+import internal from 'stream';
 
 
 interface SoundGroupProps {
@@ -66,16 +67,19 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
         setInternalState({ ...internalState, expanded: !internalState.expanded });
     };
 
+    const onAudioEnded = useCallback(() => {
+        console.log('onaudioended',isPlaying, internalState)
+        if (isPlaying) 
+        {
+            nextAudio();
+        }
+    }, [internalState]);
+
     const startSound = (index: number, ixArr: number[]) => {
         if (isPlaying)
-        {            
+        {
             const audio = new Audio('/audio/' + group.audio[ixArr[index]].path);
-            audio.addEventListener("ended", () => {
-                if (isPlaying)
-                {
-                    nextAudio();
-                }
-            });
+            audio.addEventListener("ended", onAudioEnded);
             audio.play();
             setPlayingSound(audio);
             return audio;
@@ -106,16 +110,20 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
     };
 
     const nextAudio = () => {
-        playingSound?.pause();
-        if (playingSound) playingSound.srcObject = null;
-        console.log('next',internalState)
-        if (internalState.indexPlaying >= 0)
+        if (playingSound) 
+        {
+            playingSound.pause();
+            playingSound.srcObject = null;
+        }
+        //console.log('next',internalState, isPlaying)
+        if (internalState.indexPlaying >= 0 && isPlaying)
         {
             setInternalState({ ...internalState, indexPlaying: (internalState.indexPlaying + 1) % group.audio.length });
         }
     };
 
     const setIndex = (audioIndex: number) => {
+        //console.log('setIndex',isPlaying,internalState)
         if (isPlaying)
         {
             setInternalState({...internalState, indexPlaying: internalState.shuffledOrder.indexOf(audioIndex)});
@@ -143,6 +151,8 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
         }
         else if (playingSound)
         {
+            console.log('pausing', internalState)
+            playingSound.removeEventListener("ended", onAudioEnded);
             setInternalState({ ...internalState, indexPlaying: -1, shuffledOrder: [], audioIndexTryingToPlay: -1 });
         }
     }
@@ -154,9 +164,11 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
 
     // Handle playing index change
     useEffect(() => {
+        if (group.audio.length === 0) return;
         // When we were playing but have stopped, fade out
         if (internalState.indexPlaying < 0 && playingSound)
         {
+            //console.log('top',internalState)
             fadeOut(playingSound);
             setPlayingSound(undefined);
             setInternalState({ ...internalState, indexPlaying: -1, shuffledOrder: [], audioIndexTryingToPlay: -1 })
@@ -164,6 +176,7 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
         // When we were not playing, but have started, fade in
         else if (!playingSound)
         {
+            //console.log('mid',internalState)
             const audio = startSound(0, internalState.shuffledOrder);
             if (audio)
             {
@@ -174,6 +187,7 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
         // When we change the audio clip, skip to it
         else
         {
+            //console.log('bot',internalState)
             playingSound?.pause();
             if (playingSound) playingSound.srcObject = null;
             setPlayingSound(undefined);
@@ -208,6 +222,7 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
                 title={group.groupName}
                 className={styles.header}
                 sx={{ fontWeight: 'bolder' }}
+                onClick={handlePlayClick}
             />            
             <Collapse 
                 in={internalState.expanded} 
