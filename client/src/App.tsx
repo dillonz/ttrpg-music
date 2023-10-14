@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { loadState } from './redux/actions';
 import { updateState } from './redux/reducers';
 import store from './redux/store';
+import { CssBaseline } from '@mui/material';
 
 const theme = createTheme({
   palette: {
@@ -20,8 +21,11 @@ const theme = createTheme({
     secondary: {
       main: purple[500],
     },
-  }
-},);
+    background: {
+      default: "#222222",
+    }
+  },
+});
 
 export interface AudioGroupData {
   groupName: string;
@@ -61,6 +65,7 @@ const App: React.FC = () => {
 
   if (isLoaded) return (
     <ThemeProvider theme={theme}>
+      <CssBaseline>
       <div className="App">
         <div className="contentContainer">
           <div className="content">
@@ -70,10 +75,8 @@ const App: React.FC = () => {
             </div>
           </div>
         </div>
-        {/* <footer className="footer">
-          <FileUploader />
-        </footer> */}
       </div>
+      </CssBaseline>
     </ThemeProvider>
   );
   return null;

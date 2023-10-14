@@ -47,13 +47,13 @@
         "groupName": "Emotional"
     },
     {
-        "groupName": "Festival",
+        "audio": [],
         "bgColor": "#5CA157",
-        "audio": []
+        "groupName": "Festival"
     },
     {
-        "groupName": "Underwater",
+        "audio": [],
         "bgColor": "#054E93",
-        "audio": []
+        "groupName": "Underwater"
     }
 ]

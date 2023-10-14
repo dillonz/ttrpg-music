@@ -222,7 +222,6 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
                 title={group.groupName}
                 className={styles.header}
                 sx={{ fontWeight: 'bolder' }}
-                onClick={handlePlayClick}
             />            
             <Collapse 
                 in={internalState.expanded} 
