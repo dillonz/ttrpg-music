@@ -9,6 +9,7 @@ import PlayButton from './PlayButton';
 import { FastForward } from '@mui/icons-material';
 import MoreButton from './MoreButton';
 import internal from 'stream';
+import AmbientGroup from './AmbientGroup';
 
 
 interface SoundGroupProps {
@@ -195,6 +196,8 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
         }
     }, [internalState.indexPlaying])
 
+    if (group.isAmbient) return <AmbientGroup group={group} index={index}/>
+
     return (
     <Card 
         className={styles.card}
@@ -232,11 +235,10 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
                         group.audio.map((audio, i) => (
                             <SoundButton 
                                 key={audio.name}
-                                name={audio.name} 
-                                path={audio.path} 
+                                audio={audio}
                                 index={i}
-                                indexPlayingInGroup={internalState.shuffledOrder[internalState.indexPlaying]}
-                                playSpecificAudio={setIndex}
+                                isPlaying={internalState.shuffledOrder[internalState.indexPlaying] === i}
+                                playAudio={setIndex}
                                 groupIndex={index}
                             />
                         ))

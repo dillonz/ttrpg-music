@@ -2,6 +2,17 @@
     {
         "audio": [
             {
+                "name": "Ambient",
+                "path": "a-piano-with-a-creepy-atmosphere-for-scary-stories-demo-version-158423_1.mp3"
+            }
+        ],
+        "bgColor": "#989898",
+        "groupName": "Ambient",
+        "isAmbient": true
+    },
+    {
+        "audio": [
+            {
                 "name": "3 Seconds",
                 "path": "sample-3s.mp3"
             },

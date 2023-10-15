@@ -9,17 +9,18 @@ import axios from 'axios';
 import store from '../redux/store';
 import { updateState } from '../redux/reducers';
 import SelectGroupModal from './SelectGroupModal';
+import { AudioData } from '../App';
 
 interface SoundButtonProps {
-  name: string;
-  path: string;
+  audio: AudioData
   index: number;
-  indexPlayingInGroup: number;
-  playSpecificAudio: (index: number) => void;
+  playAudio: (index: number) => void;
   groupIndex: number;
+  isPlaying: boolean;
+  isAmbient?: boolean;
 }
 
-const SoundButton: React.FC<SoundButtonProps> = ({ name, path, index, indexPlayingInGroup, playSpecificAudio, groupIndex }) => {
+const SoundButton: React.FC<SoundButtonProps> = ({ audio, index, groupIndex, isPlaying, playAudio, isAmbient }) => {
     let [confirmingDelete, setConfirmingDelete] = React.useState(false);
     let [showGroupModal, setShowGroupModal] = React.useState(false);
     const dispatch = useDispatch();
@@ -45,6 +46,18 @@ const SoundButton: React.FC<SoundButtonProps> = ({ name, path, index, indexPlayi
             setConfirmingDelete(true);
         }
     }
+
+    const handleClick = () => {
+        if (isAmbient && isPlaying)
+        {
+            playAudio(-1);
+        }
+        else
+        {
+            playAudio(index)
+        }
+    };
+
     return (
         <span
             style={{
@@ -52,27 +65,30 @@ const SoundButton: React.FC<SoundButtonProps> = ({ name, path, index, indexPlayi
             }}
         >
             <Button 
-                onClick={() => playSpecificAudio(index)}
+                onClick={handleClick}
                 variant="contained"
-                color={index === indexPlayingInGroup ? "secondary" : "primary" }
-                key={path}
+                color={isPlaying ? "secondary" : "primary" }
+                key={audio.path}
                 style={{
                     width: "100%",
                     margin: "5px",
                 }}
             >
-                {name}
+                {audio.name}
             </Button>
             <IconButton
                 onClick={onDeleteClick}
             >
                 {confirmingDelete ? <DeleteForever /> : <Delete />}
             </IconButton>
-            <IconButton
-                onClick={() => setShowGroupModal(true)}
-            >
-                <DriveFileMove />
-            </IconButton>
+            {
+                isAmbient ? null :
+                <IconButton
+                    onClick={() => setShowGroupModal(true)}
+                >
+                    <DriveFileMove />
+                </IconButton>
+            }  
             <SelectGroupModal
                 open={showGroupModal}
                 onClose={() => setShowGroupModal(false)}

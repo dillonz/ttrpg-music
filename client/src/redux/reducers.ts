@@ -8,7 +8,7 @@ import store from './store';
 export let initialState: AppState = {
     soundDb: [],
     isLoaded: false,
-    groupPlayingIx: -1
+    groupPlayingIx: -1,
 }
 
 const loadState = createAction<AudioGroupData[]>(LOAD_STATE);
@@ -64,7 +64,7 @@ export const RootReducer = createReducer<AppState>(initialState, (builder) => {
     .addCase(createGroup, (state, action) => {
         const { groupName, bgColor } = action.payload;
         const db = state.soundDb as AudioGroupData[];
-        db.push({ groupName: groupName, bgColor: bgColor, audio: [] })
+        db.push({ groupName: groupName, bgColor: bgColor, audio: [], isAmbient: false })
     })
     .addCase(editGroup, (state, action) => {
         const { groupName, bgColor, groupIndex } = action.payload;

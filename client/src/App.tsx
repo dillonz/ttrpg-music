@@ -31,6 +31,7 @@ export interface AudioGroupData {
   groupName: string;
   bgColor: string;
   audio: AudioData[];
+  isAmbient: boolean;
 }
 
 export interface AudioData {
