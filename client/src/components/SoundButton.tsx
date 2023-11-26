@@ -10,6 +10,7 @@ import store from '../redux/store';
 import { updateState } from '../redux/reducers';
 import SelectGroupModal from './SelectGroupModal';
 import { AudioData } from '../App';
+import VolumeSlider from './VolumeSlider';
 
 interface SoundButtonProps {
   audio: AudioData
@@ -59,9 +60,13 @@ const SoundButton: React.FC<SoundButtonProps> = ({ audio, index, groupIndex, isP
     };
 
     return (
-        <span
+        <div
+            className="d-flex"
             style={{
-                display: 'flex'
+                display: "flex",
+                minWidth: '300px',
+                maxWidth: '500px',
+                width: '100%'
             }}
         >
             <Button 
@@ -70,19 +75,26 @@ const SoundButton: React.FC<SoundButtonProps> = ({ audio, index, groupIndex, isP
                 color={isPlaying ? "secondary" : "primary" }
                 key={audio.path}
                 style={{
-                    width: "100%",
+                    width: isAmbient ? "100%" : "100%",
+                    minWidth: isAmbient ? "200px" : "",
                     margin: "5px",
                 }}
             >
                 {audio.name}
             </Button>
+            {
+                isAmbient ? 
+                <VolumeSlider index={index} groupIndex={groupIndex}/>
+                : null
+            }
             <IconButton
                 onClick={onDeleteClick}
             >
                 {confirmingDelete ? <DeleteForever /> : <Delete />}
             </IconButton>
             {
-                isAmbient ? null :
+                isAmbient ? 
+                null :
                 <IconButton
                     onClick={() => setShowGroupModal(true)}
                 >
@@ -94,7 +106,7 @@ const SoundButton: React.FC<SoundButtonProps> = ({ audio, index, groupIndex, isP
                 onClose={() => setShowGroupModal(false)}
                 handleSelect={onSendToGroup}
             />
-        </span>
+        </div>
     );
 };
 

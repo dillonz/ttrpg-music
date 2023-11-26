@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import { AppState, AudioData, AudioGroupData } from '../App';
 import { createAction, createReducer } from '@reduxjs/toolkit'
-import { ADD_AUDIO, AddAudioPL, CREATE_GROUP, CreateGroupPL, DELETE_AUDIO, DELETE_GROUP, DeleteAudioPL, DeleteGroupPL, EDIT_GROUP, EditGroupPL, LOAD_STATE, MOVE_AUDIO, MoveAudioPL, PLAY_GROUP } from './actions';
+import { ADD_AUDIO, AddAudioPL, CREATE_GROUP, CreateGroupPL, DELETE_AUDIO, DELETE_GROUP, DeleteAudioPL, DeleteGroupPL, EDIT_GROUP, EDIT_VOLUME, EditGroupPL, EditVolumePL, LOAD_STATE, MOVE_AUDIO, MoveAudioPL, PLAY_GROUP } from './actions';
 import axios from 'axios';
 import store from './store';
 
@@ -19,6 +19,7 @@ const addAudio = createAction<AddAudioPL>(ADD_AUDIO);
 const deleteGroup = createAction<DeleteGroupPL>(DELETE_GROUP);
 const createGroup = createAction<CreateGroupPL>(CREATE_GROUP);
 const editGroup = createAction<EditGroupPL>(EDIT_GROUP);
+const editVoume = createAction<EditVolumePL>(EDIT_VOLUME);
 
 export const updateState = (db: AudioGroupData[]) => {
     axios.post('/save_state', db);
@@ -64,12 +65,17 @@ export const RootReducer = createReducer<AppState>(initialState, (builder) => {
     .addCase(createGroup, (state, action) => {
         const { groupName, bgColor } = action.payload;
         const db = state.soundDb as AudioGroupData[];
-        db.push({ groupName: groupName, bgColor: bgColor, audio: [], isAmbient: false })
+        db.push({ groupName: groupName, bgColor: bgColor, audio: [], isAmbient: false, isTest: false })
     })
     .addCase(editGroup, (state, action) => {
         const { groupName, bgColor, groupIndex } = action.payload;
         const db = state.soundDb as AudioGroupData[];
         db[groupIndex].bgColor = bgColor;
         db[groupIndex].groupName = groupName;
+    })
+    .addCase(editVoume, (state, action) => {
+        const { groupIndex, audioIndex, newVolume } = action.payload;
+        const db = state.soundDb as AudioGroupData[];
+        db[groupIndex].audio[audioIndex].volume = newVolume;
     })
 });

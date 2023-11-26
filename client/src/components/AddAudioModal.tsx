@@ -20,7 +20,7 @@ interface AddAudioModalProps {
 const AddAudioModal: React.FC<AddAudioModalProps> = ({ open, onClose }) => {
     const theme=useTheme();
     const radioGroupRef = React.useRef<HTMLElement>(null);
-    const [group, setGroup] = React.useState(0);
+    const [group, setGroup] = React.useState(1);
     const [selectedFile, setSelectedFile] = React.useState<File | undefined>(undefined);
     const [name, setName] = React.useState("");
 
@@ -29,7 +29,7 @@ const AddAudioModal: React.FC<AddAudioModalProps> = ({ open, onClose }) => {
     function handleClose(event: any): void {
         event.preventDefault();
         setSelectedFile(undefined);
-        setGroup(0);
+        setName("");
         onClose();
     }
 
@@ -53,8 +53,17 @@ const AddAudioModal: React.FC<AddAudioModalProps> = ({ open, onClose }) => {
             });
         }
         setSelectedFile(undefined);
-        setGroup(0);
-        onClose();
+        handleClose(event);
+    }
+
+    const handleSetSelectedFile = (file: File | undefined) => {
+        setSelectedFile(file);
+        if (!!file)
+        {
+            const t: string[] = file.name.split('.');
+            t.pop();
+            setName(t.join('.'))
+        }
     }
 
     const handleNameChange = (event: any) => {
@@ -63,15 +72,23 @@ const AddAudioModal: React.FC<AddAudioModalProps> = ({ open, onClose }) => {
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setGroup(Number((event.target as HTMLInputElement).value));
     };
+
+    const onKeyDown = (event: any) => {
+        console.log(event);
+        if (event.code === "Enter" && selectedFile && name && group > 0)
+        {
+            handleAdd(event);
+        }
+    };
     
     return (
-        <div>
+        <div onKeyDown={onKeyDown}>
             <Dialog open={open}>
                 <DialogTitle>Add Audio</DialogTitle>
                 <DialogContent>
                     <FileUploader
                         selectedFile={selectedFile}
-                        setSelectedFile={setSelectedFile}
+                        setSelectedFile={handleSetSelectedFile}
                     />
                     { selectedFile ? (
                     <div>

@@ -49,7 +49,9 @@ const AmbientGroup: React.FC<AmbientGroupProps> = ({ group, index }) => {
 
     const startSound = (index: number) => {
         console.log(index);
-        const audio = new Audio('/audio/' + group.audio[index].path);
+        const song = group.audio[index];
+        const audio = new Audio('/audio/' + song.path);
+        audio.volume = !song.volume ? 1 : song.volume / 100;
         audio.loop = true;
         audio.play();
         setPlayingSound(audio);
@@ -104,14 +106,19 @@ const AmbientGroup: React.FC<AmbientGroupProps> = ({ group, index }) => {
         else if (playingSound)
         {
             //console.log('bot',internalState)
-            playingSound?.pause();
-            if (playingSound) playingSound.srcObject = null;
             setPlayingSound(undefined);
             fadeOut(playingSound)
             const audio = startSound(indexPlaying);
             fadeIn(audio)
         }
     }, [indexPlaying])
+
+    useEffect(() => {
+        if (playingSound && !!group.audio[indexPlaying].volume)
+        {
+            playingSound.volume = group.audio[indexPlaying].volume as number / 100;
+        }
+    }, [group.audio])
 
     return (
     <Card 
@@ -134,19 +141,21 @@ const AmbientGroup: React.FC<AmbientGroupProps> = ({ group, index }) => {
                 timeout={{appear:0, exit:100, enter:100}}
             >
                 <CardContent>
-                    {
-                        group.audio.map((audio, i) => (
-                            <SoundButton 
-                                key={audio.name}
-                                audio={audio}
-                                index={i}
-                                playAudio={setIndexPlaying}
-                                groupIndex={index}
-                                isPlaying={indexPlaying === i}
-                                isAmbient={true}
-                            />
-                        ))
-                    }
+                    <div className="d-flex flex-wrap">
+                        {
+                            group.audio.map((audio, i) => (
+                                <SoundButton 
+                                    key={audio.name}
+                                    audio={audio}
+                                    index={i}
+                                    playAudio={setIndexPlaying}
+                                    groupIndex={index}
+                                    isPlaying={indexPlaying === i}
+                                    isAmbient={true}
+                                />
+                            ))
+                        }
+                    </div>
                 </CardContent>
             </Collapse>
     </Card>

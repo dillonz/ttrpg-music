@@ -97,3 +97,17 @@ export const editGroup = (payload: EditGroupPL) => {
     payload,
   }
 }
+
+// Editing volume of audio
+export const EDIT_VOLUME = 'EDIT_VOLUME';
+export interface EditVolumePL {
+  groupIndex: number
+  audioIndex: number;
+  newVolume: number;
+}
+export const editVolume = (payload: EditVolumePL) => {
+  return {
+    type: EDIT_VOLUME,
+    payload,
+  }
+}

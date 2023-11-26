@@ -79,6 +79,7 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
     const startSound = (index: number, ixArr: number[]) => {
         if (isPlaying)
         {
+            //console.log('starting', group.audio[ixArr[index]].path)
             const audio = new Audio('/audio/' + group.audio[ixArr[index]].path);
             audio.addEventListener("ended", onAudioEnded);
             audio.play();
@@ -230,7 +231,7 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
                 in={internalState.expanded} 
                 timeout={{appear:0, exit:100, enter:100}}
             >
-                <CardContent>
+                <CardContent style={{display: 'block'}}>
                     {
                         group.audio.map((audio, i) => (
                             <SoundButton 
