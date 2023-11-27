@@ -19,7 +19,7 @@ function createWindow() {
 
   if (isDev) {
     // Open the DevTools in development
-    mainWindow.webContents.openDevTools();
+    //mainWindow.webContents.openDevTools();
   }
 
   mainWindow.on('closed', () => {

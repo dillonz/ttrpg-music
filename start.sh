@@ -13,7 +13,10 @@ start_servers() {
 
   # Start Node.js client
   cd ../client
-  npm start
+  npm start &
+
+  sleep 2
+  npm run electron-start
 }
 
 # Function to stop the servers
