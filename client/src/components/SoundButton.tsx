@@ -9,17 +9,19 @@ import axios from 'axios';
 import store from '../redux/store';
 import { updateState } from '../redux/reducers';
 import SelectGroupModal from './SelectGroupModal';
+import { AudioData } from '../App';
+import VolumeSlider from './VolumeSlider';
 
 interface SoundButtonProps {
-  name: string;
-  path: string;
+  audio: AudioData
   index: number;
-  indexPlayingInGroup: number;
-  playSpecificAudio: (index: number) => void;
+  playAudio: (index: number) => void;
   groupIndex: number;
+  isPlaying: boolean;
+  isAmbient?: boolean;
 }
 
-const SoundButton: React.FC<SoundButtonProps> = ({ name, path, index, indexPlayingInGroup, playSpecificAudio, groupIndex }) => {
+const SoundButton: React.FC<SoundButtonProps> = ({ audio, index, groupIndex, isPlaying, playAudio, isAmbient }) => {
     let [confirmingDelete, setConfirmingDelete] = React.useState(false);
     let [showGroupModal, setShowGroupModal] = React.useState(false);
     const dispatch = useDispatch();
@@ -45,40 +47,66 @@ const SoundButton: React.FC<SoundButtonProps> = ({ name, path, index, indexPlayi
             setConfirmingDelete(true);
         }
     }
+
+    const handleClick = () => {
+        if (isAmbient && isPlaying)
+        {
+            playAudio(-1);
+        }
+        else
+        {
+            playAudio(index)
+        }
+    };
+
     return (
-        <span
+        <div
+            className="d-flex"
             style={{
-                display: 'flex'
+                display: "flex",
+                minWidth: '300px',
+                maxWidth: '500px',
+                width: '100%'
             }}
         >
             <Button 
-                onClick={() => playSpecificAudio(index)}
+                onClick={handleClick}
                 variant="contained"
-                color={index === indexPlayingInGroup ? "secondary" : "primary" }
-                key={path}
+                color={isPlaying ? "secondary" : "primary" }
+                key={audio.path}
                 style={{
-                    width: "100%",
+                    width: isAmbient ? "100%" : "100%",
+                    minWidth: isAmbient ? "200px" : "",
                     margin: "5px",
                 }}
             >
-                {name}
+                {audio.name}
             </Button>
+            {
+                isAmbient ? 
+                <VolumeSlider index={index} groupIndex={groupIndex}/>
+                : null
+            }
             <IconButton
                 onClick={onDeleteClick}
             >
                 {confirmingDelete ? <DeleteForever /> : <Delete />}
             </IconButton>
-            <IconButton
-                onClick={() => setShowGroupModal(true)}
-            >
-                <DriveFileMove />
-            </IconButton>
+            {
+                isAmbient ? 
+                null :
+                <IconButton
+                    onClick={() => setShowGroupModal(true)}
+                >
+                    <DriveFileMove />
+                </IconButton>
+            }  
             <SelectGroupModal
                 open={showGroupModal}
                 onClose={() => setShowGroupModal(false)}
                 handleSelect={onSendToGroup}
             />
-        </span>
+        </div>
     );
 };
 

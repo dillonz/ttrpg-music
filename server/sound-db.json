@@ -2,16 +2,64 @@
     {
         "audio": [
             {
+                "name": "City",
+                "path": "Medieval_City__Realistic_Ambience__1_Hour.mp3",
+                "volume": 43
+            },
+            {
+                "name": "Underwater",
+                "path": "Underwater_Ambience_-_DND.mp3",
+                "volume": 43
+            },
+            {
+                "name": "Tavern",
+                "path": "Tavern_-_DnD_Ambience.mp3",
+                "volume": 65
+            },
+            {
+                "name": "Cave",
+                "path": "Cave_Ambience.mp3",
+                "volume": 51
+            }
+        ],
+        "bgColor": "#989898",
+        "groupName": "Ambient",
+        "isAmbient": true
+    },
+    {
+        "audio": [
+            {
                 "name": "3 Seconds",
                 "path": "sample-3s.mp3"
             },
             {
                 "name": "9 Seconds",
                 "path": "sample-9s.mp3"
+            },
+            {
+                "name": "From Past to Present - Skyrim",
+                "path": "From_Past_to_Present_-_Skyrim.mp3"
+            },
+            {
+                "name": "From Past to Present - Skyrim",
+                "path": "From_Past_to_Present_-_Skyrim_1.mp3"
+            },
+            {
+                "name": "Gilded Vale - PoE",
+                "path": "Gilded_Vale_-_PoE.mp3"
+            },
+            {
+                "name": "After Dark",
+                "path": "After_Dark.mp3"
+            },
+            {
+                "name": "Into Midnight",
+                "path": "Into_Midnight.mp3"
             }
         ],
         "bgColor": "#B4EFBA",
-        "groupName": "Test 1"
+        "groupName": "Test 1",
+        "isTest": true
     },
     {
         "audio": [
@@ -29,31 +77,299 @@
             }
         ],
         "bgColor": "#E3E3E3",
-        "groupName": "Test 2"
+        "groupName": "Test 2",
+        "isTest": true
     },
     {
-        "audio": [],
+        "audio": [
+            {
+                "name": "Apolons Fate",
+                "path": "Apolons_Fate.mp3"
+            },
+            {
+                "name": "Dragon King of the South",
+                "path": "Dragon_King_of_the_South.mp3"
+            },
+            {
+                "name": "Last March of the Serpent King",
+                "path": "Last_March_of_the_Serpent_King.mp3"
+            },
+            {
+                "name": "The Airship Armada",
+                "path": "The_Airship_Armada.mp3"
+            },
+            {
+                "name": "The Clockwork Dragon",
+                "path": "The_Clockwork_Dragon.mp3"
+            },
+            {
+                "name": "The Eternal War",
+                "path": "The_Eternal_War.mp3"
+            },
+            {
+                "name": "The Last Dragonlord",
+                "path": "The_Last_Dragonlord.mp3"
+            },
+            {
+                "name": "The Rise of the Valkyries",
+                "path": "The_Rise_of_the_Valkyries.mp3"
+            },
+            {
+                "name": "Wrath of the Blood Queen",
+                "path": "Wrath_of_the_Blood_Queen.mp3"
+            },
+            {
+                "name": "Cannibals Path",
+                "path": "Cannibals_Path.mp3"
+            }
+        ],
         "bgColor": "#FF0000",
         "groupName": "Combat"
     },
     {
-        "audio": [],
-        "bgColor": "#CB64FA",
-        "groupName": "Mysterious"
-    },
-    {
-        "audio": [],
-        "bgColor": "#52CFF8",
-        "groupName": "Emotional"
-    },
-    {
-        "groupName": "Festival",
+        "audio": [
+            {
+                "name": "Festival Music",
+                "path": "Festival_Music.mp3"
+            }
+        ],
         "bgColor": "#5CA157",
-        "audio": []
+        "groupName": "Festival"
     },
     {
-        "groupName": "Underwater",
-        "bgColor": "#054E93",
-        "audio": []
+        "audio": [
+            {
+                "name": "Blacklake District - Neverwinter Nights",
+                "path": "Blacklake_District_-_Neverwinter_Nights.mp3"
+            },
+            {
+                "name": "Dawn - Skyrim",
+                "path": "Dawn_-_Skyrim.mp3"
+            },
+            {
+                "name": "Defiance Bay - PoE",
+                "path": "Defiance_Bay_-_PoE.mp3"
+            },
+            {
+                "name": "Distant Horizons - Skyrim",
+                "path": "Distant_Horizons_-_Skyrim.mp3"
+            },
+            {
+                "name": "Dun Morogh - WoW",
+                "path": "Dun_Morogh_-_WoW.mp3"
+            },
+            {
+                "name": "Elmshore - PoE",
+                "path": "Elmshore_-_PoE.mp3"
+            },
+            {
+                "name": "Elwynn Forest - WoW",
+                "path": "Elwynn_Forest_-_WoW.mp3"
+            },
+            {
+                "name": "From Past to Present - Skyrim",
+                "path": "From_Past_to_Present_-_Skyrim_2.mp3"
+            },
+            {
+                "name": "Frosfall - Skyrim",
+                "path": "Frosfall_-_Skyrim.mp3"
+            },
+            {
+                "name": "Kuldahar Theme - Icewind",
+                "path": "Kuldahar_Theme_-_Icewind.wav"
+            },
+            {
+                "name": "Gilded Vale - PoE",
+                "path": "Gilded_Vale_-_PoE_1.mp3"
+            },
+            {
+                "name": "Kyne's Peace - Skyrim",
+                "path": "Kyne's_Peace_-_Skyrim.mp3"
+            },
+            {
+                "name": "Romance - BG2",
+                "path": "Romance_-_BG2.mp3"
+            },
+            {
+                "name": "Secunda - Skyrim",
+                "path": "Secunda_-_Skyrim.mp3"
+            },
+            {
+                "name": "Spikeroog - Witcher 3",
+                "path": "Spikeroog_-_Witcher_3.mp3"
+            },
+            {
+                "name": "The City Gates - Skyrim",
+                "path": "The_City_Gates_-_Skyrim.mp3"
+            },
+            {
+                "name": "The Streets of Whiterun - Skyrim",
+                "path": "The_Streets_of_Whiterun_-_Skyrim.mp3"
+            }
+        ],
+        "bgColor": "#38E1E3",
+        "groupName": "Travel - Peaceful",
+        "isAmbient": false,
+        "isTest": false
+    },
+    {
+        "audio": [
+            {
+                "name": "7 Years From You",
+                "path": "7_Years_From_You.mp3"
+            },
+            {
+                "name": "After Dark",
+                "path": "After_Dark_1.mp3"
+            },
+            {
+                "name": "Antonyms",
+                "path": "Antonyms.mp3"
+            },
+            {
+                "name": "Born of Water",
+                "path": "Born_of_Water.mp3"
+            },
+            {
+                "name": "Clouds of Sapphire",
+                "path": "Clouds_of_Sapphire.mp3"
+            },
+            {
+                "name": "Expanse",
+                "path": "Expanse.mp3"
+            },
+            {
+                "name": "Forget Everything and Fall Asleep",
+                "path": "Forget_Everything_and_Fall_Asleep.mp3"
+            },
+            {
+                "name": "Forgotten at Sea",
+                "path": "Forgotten_at_Sea.mp3"
+            },
+            {
+                "name": "Goodbye",
+                "path": "Goodbye.mp3"
+            },
+            {
+                "name": "He Is the Father I Never Had",
+                "path": "He_Is_the_Father_I_Never_Had.mp3"
+            },
+            {
+                "name": "Hope",
+                "path": "Hope.mp3"
+            },
+            {
+                "name": "I Dont Want to Hide Anymore",
+                "path": "I_Dont_Want_to_Hide_Anymore.mp3"
+            },
+            {
+                "name": "Into Midnight",
+                "path": "Into_Midnight_1.mp3"
+            },
+            {
+                "name": "No Turning Back",
+                "path": "No_Turning_Back.mp3"
+            },
+            {
+                "name": "Please Dont Forget Me",
+                "path": "Please_Dont_Forget_Me.mp3"
+            },
+            {
+                "name": "Put on Your Armor One Last Time",
+                "path": "Put_on_Your_Armor_One_Last_Time.mp3"
+            },
+            {
+                "name": "Remembrance",
+                "path": "Remembrance.mp3"
+            },
+            {
+                "name": "Sky Sailing",
+                "path": "Sky_Sailing.mp3"
+            },
+            {
+                "name": "Stories from the Sky",
+                "path": "Stories_from_the_Sky.mp3"
+            },
+            {
+                "name": "The Heavens",
+                "path": "The_Heavens.mp3"
+            },
+            {
+                "name": "The Night",
+                "path": "The_Night.mp3"
+            },
+            {
+                "name": "Turned Into a Bird then Flew Away",
+                "path": "Turned_Into_a_Bird_then_Flew_Away.mp3"
+            }
+        ],
+        "bgColor": "#B700FF",
+        "groupName": "Emotional",
+        "isAmbient": false,
+        "isTest": false
+    },
+    {
+        "audio": [
+            {
+                "name": "A Heart Full of Thorns",
+                "path": "A_Heart_Full_of_Thorns.mp3"
+            },
+            {
+                "name": "A Silver Chandelier",
+                "path": "A_Silver_Chandelier.mp3"
+            },
+            {
+                "name": "Belly of the Beast",
+                "path": "Belly_of_the_Beast.mp3"
+            },
+            {
+                "name": "Hounds of the Forsaken Hollow",
+                "path": "Hounds_of_the_Forsaken_Hollow.mp3"
+            },
+            {
+                "name": "I Dream of Broken Machines",
+                "path": "I_Dream_of_Broken_Machines.mp3"
+            },
+            {
+                "name": "Joran's Woods",
+                "path": "Joran's_Woods.mp3"
+            },
+            {
+                "name": "Paintings in a Clocktower",
+                "path": "Paintings_in_a_Clocktower.mp3"
+            },
+            {
+                "name": "Perils of Arthan",
+                "path": "Perils_of_Arthan.mp3"
+            },
+            {
+                "name": "Soulbound",
+                "path": "Soulbound.mp3"
+            },
+            {
+                "name": "The Forbidden Book",
+                "path": "The_Forbidden_Book.mp3"
+            },
+            {
+                "name": "The Forbidden Garden",
+                "path": "The_Forbidden_Garden.mp3"
+            },
+            {
+                "name": "The Forbidden Room",
+                "path": "The_Forbidden_Room.mp3"
+            },
+            {
+                "name": "The Keymaster",
+                "path": "The_Keymaster.mp3"
+            },
+            {
+                "name": "TickTock Goes the Broken Clock",
+                "path": "TickTock_Goes_the_Broken_Clock.mp3"
+            }
+        ],
+        "bgColor": "#F7FF00",
+        "groupName": "Mysterious",
+        "isAmbient": false,
+        "isTest": false
     }
 ]

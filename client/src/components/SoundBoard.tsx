@@ -23,6 +23,7 @@ const SoundBoard: React.FC<SoundBoardProps> = ({ }) => {
         <div>
             {
                 soundDb.map((group, i) => (
+                    group.isTest ? null :
                     <SoundGroup 
                         group={group}
                         key={group.groupName}

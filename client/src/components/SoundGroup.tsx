@@ -9,6 +9,7 @@ import PlayButton from './PlayButton';
 import { FastForward } from '@mui/icons-material';
 import MoreButton from './MoreButton';
 import internal from 'stream';
+import AmbientGroup from './AmbientGroup';
 
 
 interface SoundGroupProps {
@@ -78,6 +79,7 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
     const startSound = (index: number, ixArr: number[]) => {
         if (isPlaying)
         {
+            //console.log('starting', group.audio[ixArr[index]].path)
             const audio = new Audio('/audio/' + group.audio[ixArr[index]].path);
             audio.addEventListener("ended", onAudioEnded);
             audio.play();
@@ -195,6 +197,8 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
         }
     }, [internalState.indexPlaying])
 
+    if (group.isAmbient) return <AmbientGroup group={group} index={index}/>
+
     return (
     <Card 
         className={styles.card}
@@ -222,22 +226,20 @@ const SoundGroup: React.FC<SoundGroupProps> = ({ group, isPlaying, onPlay, index
                 title={group.groupName}
                 className={styles.header}
                 sx={{ fontWeight: 'bolder' }}
-                onClick={handlePlayClick}
             />            
             <Collapse 
                 in={internalState.expanded} 
                 timeout={{appear:0, exit:100, enter:100}}
             >
-                <CardContent>
+                <CardContent style={{display: 'block'}}>
                     {
                         group.audio.map((audio, i) => (
                             <SoundButton 
                                 key={audio.name}
-                                name={audio.name} 
-                                path={audio.path} 
+                                audio={audio}
                                 index={i}
-                                indexPlayingInGroup={internalState.shuffledOrder[internalState.indexPlaying]}
-                                playSpecificAudio={setIndex}
+                                isPlaying={internalState.shuffledOrder[internalState.indexPlaying] === i}
+                                playAudio={setIndex}
                                 groupIndex={index}
                             />
                         ))
