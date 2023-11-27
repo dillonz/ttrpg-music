@@ -4,6 +4,7 @@
 start_servers() {
   # Start Flask server
   cd server
+  pip3 install flask
   flask --app server.py run &
 
   # Wait for Flask server to start
