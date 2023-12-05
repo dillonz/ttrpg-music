@@ -34,6 +34,8 @@ stop_servers() {
     echo "Stopping Node.js client (PID $node_pid)..."
     kill -9 $node_pid
   fi
+
+  exit
 }
 
 # Trap to ensure servers are stopped on script exit
